@@ -3,7 +3,8 @@
 
 int main()
 {
-    char *v = "hola";
+    char v[] = "hola";
     printf("Hello world!\n");
     return 1;
 }
+
