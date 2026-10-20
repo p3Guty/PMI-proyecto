@@ -1,5 +1,6 @@
 #ifndef FECHA_H_INCLUDED
 #define FECHA_H_INCLUDED
+
 #define anioo 2026
 
 typedef struct fecha{
@@ -126,4 +127,5 @@ Fecha get_fecha (Fecha p){
     return p;
 }
 
-#endif
+
+#endif // FECHA_H_INCLUDED

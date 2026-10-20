@@ -1,7 +1,7 @@
 #ifndef TURNO_H_INCLUDED
 #define TURNO_H_INCLUDED
-/* Inclusion de la libreria auxiliar de Fecha */
 
+/* Inclusion de la libreria auxiliar de Fecha */
 #include "pacientes.h"
 #include "fecha.h"
 #include "agenda.h"
