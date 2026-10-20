@@ -1,5 +1,6 @@
 #ifndef TURNO_H_INCLUDED
 #define TURNO_H_INCLUDED
+/* Inclusion de la libreria auxiliar de Fecha */
 
 #include "pacientes.h"
 #include "fecha.h"
@@ -9,9 +10,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-/* Inclusion de la libreria auxiliar de Fecha */
-#include "fecha.h"
 
 /* Capacidad maxima para el nombre de la obra social / mutual */
 #define MAX_MUTUAL 50
