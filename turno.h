@@ -20,10 +20,10 @@
 #define ESTADO_ATENDIDO   3  /* Paciente atendido por el medico */
 #define ESTADO_CANCELADO  4  /* Turno anulado */
 
-/* -------------------------------------------------------------------------
+/* ---------------------------------------------------------------------
  * ESTRUCTURA DE DATOS: Turno
  * Agrupa todos los campos requeridos por la consigna del PMI 2026.
- * ------------------------------------------------------------------------- */
+ * --------------------------------------------------------------------- */
 typedef struct {
     int id_turno;            /* Codigo unico coincidente con el indice de la agenda */
     long dni_paciente;       /* DNI del paciente asignado al turno */

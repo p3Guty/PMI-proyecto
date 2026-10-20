@@ -13,12 +13,12 @@ typedef struct fecha{
 } Fecha;
 
 void inicio(Fecha *p){
-    (*p).anio= anioo;
-    (*p).disponible= 'L';
-    (*p).mes= 1;
-    (*p).hora=0;
-    (*p).minuto=0;
-    (*p).dia=1;
+    (*p).anio = anioo;
+    (*p).disponible = 'L';
+    (*p).mes = 1;
+    (*p).hora = 0;
+    (*p).minuto = 0;
+    (*p).dia = 1;
 }
 
 int set_dia(Fecha *p, int d){

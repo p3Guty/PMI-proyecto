@@ -5,11 +5,11 @@
 #include <stdlib.h>
 #include "turno.h"
 
-/* -------------------------------------------------------------------------
+/* --------------------------------------------------------------------------
  * ESTRUCTURA DE NODO AUTORREFERENCIADO
  * VIPD (Variable de Informacion Propiamente Dicha): Guarda el Turno.
  * next: Puntero al siguiente nodo en la memoria RAM (o NULL si es el ultimo).
- * ------------------------------------------------------------------------- */
+ * -------------------------------------------------------------------------- */
 struct nodo {
     Turno vipd;
     struct nodo *next;
