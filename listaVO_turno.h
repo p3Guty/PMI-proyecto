@@ -16,12 +16,12 @@ struct nodo {
 };
 typedef struct nodo Nodo;
 
-/* -------------------------------------------------------------------------
+/* --------------------------------------------------------------------------
  * ESTRUCTURA DEL TDA LISTA VINCULADA ORDENADA
  * acc: Puntero de Acceso al primer nodo de la lista.
  * cur: Cursor activo de trabajo.
  * aux: Puntero auxiliar al nodo inmediatamente anterior a cur.
- * ------------------------------------------------------------------------- */
+ * -------------------------------------------------------------------------- */
 typedef struct {
     Nodo *acc;
     Nodo *cur;

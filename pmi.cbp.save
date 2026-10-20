@@ -39,6 +39,7 @@
 		<Unit filename="main2.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="pacientes.h" />
 		<Unit filename="turno.h" />
 		<Extensions>
 			<code_completion />
