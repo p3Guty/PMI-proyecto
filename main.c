@@ -1,158 +1,242 @@
-/* =========================================================================
- * ARCHIVO DE APLICACION / CLIENTE: usopaciente.c
- * CONSIGNAS DESARROLLADAS:
- *   - Consigna n   : Cargar un paciente por teclado.
- *   - Consigna enye: Eliminar un paciente por teclado (validando que no posea turnos).
- * ========================================================================= */
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include "listaE_Paciente.h"
+#include "listaE_pancientes.h"
+#include "fecha.h"
+#include "turno.h"
+#include "listaVO_turno.h"
+
+
+//FUNCIONES DE TURNO Y LISTAVOTURNO
 
 /* -------------------------------------------------------------------------
- * CONSIGNA N: Cargar un paciente por teclado e insertarlo en la lista.
+ * 1. Busqueda de Turno por ID
+ * Recorre la lista buscando la coincidencia. Deja el cursor parado en el nodo.
  * ------------------------------------------------------------------------- */
-void consigna_n_cargarPaciente(ListaEPaciente *lista_p) {
-    char nom[MAX_CADENA];
-    char ape[MAX_CADENA];
-    long dni;
-    int osocial;
-    Paciente p_nuevo;
+int buscarTurnoPorId(ListaVO_Turno *l, int id_buscado) {
+    Turno temp;
 
-    printf("\n=========================================\n");
-    printf("     CONSIGNA N: CARGAR NUEVO PACIENTE   \n");
-    printf("=========================================\n");
-
-    if (isFullListaE(*lista_p) == 1) {
-        printf("ERROR: La lista de pacientes esta llena. No se pueden agregar mas registros.\n");
-        return;
-    }
-
-    printf("Ingrese el DNI del paciente: ");
-    scanf("%ld", &dni);
-
-    /* Validacion de DNI unico */
-    if (existePaciente(*lista_p, dni) == 1) {
-        printf("ERROR: Ya existe un paciente registrado con el DNI %ld.\n", dni);
-        return;
-    }
-
-    printf("Ingrese el nombre del paciente (sin espacios): ");
-    scanf("%s", nom);
-
-    printf("Ingrese el apellido del paciente (sin espacios): ");
-    scanf("%s", ape);
-
-    do {
-        printf("¿Posee obra social? (1 = SI / 0 = NO): ");
-        scanf("%d", &osocial);
-        if (osocial != 0 && osocial != 1) {
-            printf("Error: Ingrese 1 para SI o 0 para NO.\n");
+    resetListaVO(l);
+    while (isOosListaVO(*l) == 0) {
+        copyListaVO(*l, &temp);
+        if (obtener_idTurno(temp) == id_buscado) {
+            return 1; /* Coincidencia hallada: cur posicionado */
         }
-    } while (osocial != 0 && osocial != 1);
-
-    /* Creamos e insertamos el paciente usando las primitivas */
-    p_nuevo = crearPaciente(nom, ape, dni, osocial);
-
-    if (insertListaE(lista_p, p_nuevo) == 1) {
-        printf("EXITO: Paciente %s %s (DNI: %ld) registrado correctamente.\n", nom, ape, dni);
-    } else {
-        printf("ERROR: No se pudo registrar el paciente.\n");
+        forwardsListaVO(l);
     }
+    return 0; /* No encontrado */
 }
 
 /* -------------------------------------------------------------------------
- * CONSIGNA ENYE: Eliminar un paciente por teclado (solo si no posee turnos).
- * Parametros:
- *   - lista_p: puntero a la lista estatica de pacientes.
- *   - tiene_turnos: valor de control (1 si el paciente tiene turnos activos en
- *                   la lista de turnos de Persona 3, 0 si esta libre de turnos).
+ * 2. Cancelar Turno en Lista
+ * Busca el id, valida el estado actual e informa el resultado al usuario.
  * ------------------------------------------------------------------------- */
-void consigna_enye_eliminarPaciente(ListaEPaciente *lista_p, int tiene_turnos) {
-    long dni;
-    Paciente p_temp;
-    char nom[MAX_CADENA];
-    char ape[MAX_CADENA];
+int cancelarTurnoEnLista(ListaVO_Turno *l, int id_buscado) {
+    Turno temp;
 
-    printf("\n=========================================\n");
-    printf("   CONSIGNA ENYE: ELIMINAR UN PACIENTE  \n");
-    printf("=========================================\n");
+    if (buscarTurnoPorId(l, id_buscado) == 1) {
+        copyListaVO(*l, &temp);
 
-    if (isEmptyListaE(*lista_p) == 1) {
-        printf("ERROR: La lista de pacientes esta vacia. No hay datos para eliminar.\n");
-        return;
+        /* Validacion previa de estado */
+        if (obtener_estadoTurno(temp) == ESTADO_CANCELADO) {
+            printf("\n[AVISO] El turno ID %d ya se encuentra CANCELADO previamente.\n", id_buscado);
+            return 0;
+        }
+
+        /* Modificacion y guardado directo sobre el nodo activo */
+        modificar_estadoTurno(&temp, ESTADO_CANCELADO);
+        l->cur->vipd = temp;
+
+        printf("\n[EXITO] El turno ID %d ha sido CANCELADO correctamente.\n", id_buscado);
+        return 1;
     }
 
-    printf("Ingrese el DNI del paciente que desea eliminar: ");
-    scanf("%ld", &dni);
-
-    /* Búsqueda del paciente en la lista estatica */
-    if (buscarPacientePorDni(lista_p, dni) == 0) {
-        printf("RESULTADO: No se encontro ningun paciente con el DNI %ld.\n", dni);
-        return;
-    }
-
-    /* Copiamos los datos del paciente hallado */
-    copyListaE(*lista_p, &p_temp);
-    obtener_nombrePaciente(p_temp, nom);
-    obtener_apellidoPaciente(p_temp, ape);
-
-    /* RESTRICCION DEL PMI 2026: No se puede eliminar si posee turnos */
-    if (tiene_turnos == 1) {
-        printf("RECHAZADO: El paciente %s %s (DNI: %ld) posee turnos asignados.\n", nom, ape, dni);
-        printf("No se puede eliminar un paciente con turnos registrados en el sistema.\n");
-        return;
-    }
-
-    /* Si no posee turnos, procedemos a la eliminacion mediante la primitiva */
-    if (suppressListaE(lista_p) == 1) {
-        printf("EXITO: El paciente %s %s (DNI: %ld) ha sido eliminado correctamente de la lista.\n", nom, ape, dni);
-    } else {
-        printf("ERROR: No se pudo eliminar el paciente.\n");
-    }
+    printf("\n[ERROR] No se encontro ningun turno registrado con el ID %d.\n", id_buscado);
+    return 0;
 }
 
-/* Ejemplo de menu principal de prueba */
-int main(void) {
-    ListaEPaciente lista_pacientes;
-    int opcion = 0;
-    int simulacion_turnos = 0; /* Variable de simulacion: 0=Sin turnos, 1=Con turnos */
+/* -------------------------------------------------------------------------
+ * 3. Confirmar Turno en Lista
+ * Busca el id, valida reglas de negocio e informa el resultado al usuario.
+ * ------------------------------------------------------------------------- */
+int confirmarTurnoEnLista(ListaVO_Turno *l, int id_buscado) {
+    Turno temp;
 
-    initListaE(&lista_pacientes);
+    if (buscarTurnoPorId(l, id_buscado) == 1) {
+        copyListaVO(*l, &temp);
 
-    printf("=== PRUEBA DE CONSIGNAS N Y ENYE (PERSONA 1) ===\n");
-
-    do {
-        printf("\n--- MENU DE PACIENTES ---\n");
-        printf("<1> Cargar paciente (Consigna n)\n");
-        printf("<2> Eliminar paciente (Consigna enye)\n");
-        printf("<3> Salir\n");
-        printf("Seleccione una opcion: ");
-        scanf("%d", &opcion);
-
-        switch (opcion) {
-            case 1:
-                consigna_n_cargarPaciente(&lista_pacientes);
-                break;
-
-            case 2:
-                /*
-                 * En la integracion final, aqui se consulta a la lista de turnos (Persona 3).
-                 * Para esta prueba, preguntamos al usuario si simulamos que tiene turnos.
-                 */
-                printf("Simulacion de control: ¿El paciente a eliminar tiene turnos registrados? (1 = SI, 0 = NO): ");
-                scanf("%d", &simulacion_turnos);
-                consigna_enye_eliminarPaciente(&lista_pacientes, simulacion_turnos);
-                break;
-
-            case 3:
-                printf("\nSaliendo del programa de prueba de Persona 1. Fin de ejecucion.\n");
-                break;
-
-            default:
-                printf("\nOpcion invalida. Intente nuevamente.\n");
+        if (obtener_estadoTurno(temp) == ESTADO_CONFIRMADO) {
+            printf("\n[AVISO] El turno ID %d ya habia sido CONFIRMADO previamente.\n", id_buscado);
+            return 0;
         }
-    } while (opcion != 3);
 
+        if (obtener_estadoTurno(temp) == ESTADO_CANCELADO) {
+            printf("\n[ERROR] No se puede confirmar el turno ID %d porque se encuentra CANCELADO.\n", id_buscado);
+            return 0;
+        }
+
+        modificar_estadoTurno(&temp, ESTADO_CONFIRMADO);
+        l->cur->vipd = temp;
+
+        printf("\n[EXITO] El turno ID %d ha sido CONFIRMADO correctamente.\n", id_buscado);
+        return 1;
+    }
+
+    printf("\n[ERROR] No se encontro ningun turno registrado con el ID %d.\n", id_buscado);
+    return 0;
+}
+
+/* -------------------------------------------------------------------------
+ * 4. Conteo Recursivo de Turnos Atendidos por Dia y Mes (Consigna m)
+ * ------------------------------------------------------------------------- */
+int contarTurnosAtendidosRecursivaNodo(Nodo *n, int dia, int mes) {
+    Turno t;
+    Fecha f;
+    int est;
+    int suma;
+
+    if (n == NULL) {
+        return 0;
+    }
+
+    t = n->vipd;
+    f = obtener_fechaTurno(t);
+    est = obtener_estadoTurno(t);
+    suma = 0;
+
+    if (f.dia == dia && f.mes == mes && est == ESTADO_ATENDIDO) {
+        suma = 1;
+    }
+
+    return suma + contarTurnosAtendidosRecursivaNodo(n->next, dia, mes);
+}
+
+int contarTurnosAtendidosRecursiva(ListaVO_Turno l, int dia, int mes) {
+    int total;
+
+    total = contarTurnosAtendidosRecursivaNodo(l.acc, dia, mes);
+
+    printf("\n===========================================================\n");
+    printf(" REPORTE RECURSIVO: TURNOS ATENDIDOS POR DIA Y MES          \n");
+    printf("===========================================================\n");
+    printf(" Fecha consultada : %02d/%02d\n", dia, mes);
+    printf(" Total atendidos  : %d paciente(s)\n", total);
+    printf("===========================================================\n");
+
+    return total;
+}
+
+/* -------------------------------------------------------------------------
+ * 5. Conteo Recursivo de Turnos Asignados en un Mes (Consigna l)
+ * (Cuenta turnos en estado SOLICITADO o CONFIRMADO)
+ * ------------------------------------------------------------------------- */
+int contarTurnosAsignadosMesRecursivaNodo(Nodo *n, int mes_buscado) {
+    Turno t;
+    Fecha f;
+    int est;
+    int suma;
+
+    if (n == NULL) {
+        return 0;
+    }
+
+    t = n->vipd;
+    f = obtener_fechaTurno(t);
+    est = obtener_estadoTurno(t);
+    suma = 0;
+
+    if (f.mes == mes_buscado) {
+        if (est == ESTADO_SOLICITADO || est == ESTADO_CONFIRMADO) {
+            suma = 1;
+        }
+    }
+
+    return suma + contarTurnosAsignadosMesRecursivaNodo(n->next, mes_buscado);
+}
+
+int contarTurnosAsignadosMesRecursiva(ListaVO_Turno l, int mes_buscado) {
+    int total;
+
+    total = contarTurnosAsignadosMesRecursivaNodo(l.acc, mes_buscado);
+
+    printf("\n===========================================================\n");
+    printf(" REPORTE RECURSIVO: TURNOS ASIGNADOS EN EL MES              \n");
+    printf("===========================================================\n");
+    printf(" Mes consultado   : %02d\n", mes_buscado);
+    printf(" Total asignados  : %d turno(s) (Solicitados / Confirmados)\n", total);
+    printf("===========================================================\n");
+
+    return total;
+}
+
+/* -------------------------------------------------------------------------
+ * 6. Calculo del Monto Recaudado en un Mes (Consigna r)
+ * Acumula el dinero cobrado por turnos en estado ATENDIDO.
+ * ------------------------------------------------------------------------- */
+float calcularMontoMes(ListaVO_Turno l, int mes) {
+    Turno t;
+    Fecha f;
+    float total;
+
+    total = 0.0f;
+    resetListaVO(&l);
+
+    while (isOosListaVO(l) == 0) {
+        copyListaVO(l, &t);
+        f = obtener_fechaTurno(t);
+        if (f.mes == mes && obtener_estadoTurno(t) == ESTADO_ATENDIDO) {
+            total = total + obtener_monto(t);
+        }
+        forwardsListaVO(&l);
+    }
+
+    printf("\n===========================================================\n");
+    printf(" REPORTE DE RECAUDACION: TOTAL COBRADO EN EL MES           \n");
+    printf("===========================================================\n");
+    printf(" Mes consultado   : %02d\n", mes);
+    printf(" Recaudacion total: $%.2f\n", total);
+    printf("===========================================================\n");
+
+    return total;
+}
+
+int compararFechasTurno(Fecha f1, Fecha f2) {
+    if (f1.anio != f2.anio) {
+        if (f1.anio < f2.anio) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+    if (f1.mes != f2.mes) {
+        if (f1.mes < f2.mes) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+    if (f1.dia != f2.dia) {
+        if (f1.dia < f2.dia) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+    if (f1.hora != f2.hora) {
+        if (f1.hora < f2.hora) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+    if (f1.minuto != f2.minuto) {
+        if (f1.minuto < f2.minuto) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
     return 0;
 }

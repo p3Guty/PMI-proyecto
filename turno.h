@@ -51,7 +51,6 @@ void obtener_mutual(Turno t, char *destino);
 Fecha obtener_fechaTurno(Turno t);
 int obtener_estadoTurno(Turno t);
 
-int compararFechasTurno(Fecha f1, Fecha f2);
 
 /* =========================================================================
  * IMPLEMENTACION DE LAS FUNCIONES PRIMITIVAS
@@ -167,53 +166,6 @@ Fecha obtener_fechaTurno(Turno t) {
 
 int obtener_estadoTurno(Turno t) {
     return t.estado;
-}
-
-/*
- * Funcion: compararFechasTurno
- * Propósito: Compara dos variables de tipo Fecha en orden cronologico.
- * Retorno:
- *   -1 si f1 es estrictamente anterior en el tiempo a f2.
- *    1 si f1 es estrictamente posterior en el tiempo a f2.
- *    0 si ambas fechas corresponden exactamente al mismo instante.
- */
-int compararFechasTurno(Fecha f1, Fecha f2) {
-    if (f1.anio != f2.anio) {
-        if (f1.anio < f2.anio) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
-    if (f1.mes != f2.mes) {
-        if (f1.mes < f2.mes) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
-    if (f1.dia != f2.dia) {
-        if (f1.dia < f2.dia) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
-    if (f1.hora != f2.hora) {
-        if (f1.hora < f2.hora) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
-    if (f1.minuto != f2.minuto) {
-        if (f1.minuto < f2.minuto) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
-    return 0;
 }
 
 #endif // TURNO_H_INCLUDED

@@ -5,8 +5,8 @@
  *              cursor e incluye la busqueda por DNI.
  * ========================================================================= */
 
-#ifndef LISTAE_PACIENTE_H_INCLUDE
-#define LISTAE_PACIENTE_H_INCLUDE
+#ifndef LISTAE_PACIENTES_H_INCLUDE
+#define LISTAE_PACIENTES_H_INCLUDE
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -167,4 +167,4 @@ int existePaciente(ListaEPaciente l, long dni_buscado) {
     return buscarPacientePorDni(&l, dni_buscado);
 }
 
-#endif // LISTAE_PACIENTE_H_INCLUDE
+#endif // LISTAE_PACIENTES_H_INCLUDE
