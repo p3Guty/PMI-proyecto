@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "listaE_Paciente.h"
-#include "listaE_pancientes.h"
+#include "listaE_pacientes.h"
 #include "fecha.h"
 #include "turno.h"
 #include "listaVO_turno.h"
+#include "agenda.h"
+#include "pacientes.h"
 
 
 //FUNCIONES DE TURNO Y LISTAVOTURNO
@@ -239,4 +240,183 @@ int compararFechasTurno(Fecha f1, Fecha f2) {
         }
     }
     return 0;
+}
+
+/*------------------------------------------------------------------------------
+ * Funcion: buscarPacientePorDni CONSIGNA P.
+ * Propósito: Recorre la lista buscando un paciente por su DNI.
+ * Retorno: 1 si lo encuentra (cur queda parado en el elemento), 0 si no existe.
+ -------------------------------------------------------------------------------*/
+int buscarPacientePorDni(ListaE_Paciente *l, long dni_buscado) {
+    Paciente temp;
+    resetListaE(l);
+
+    while (isOosListaE(*l) == 0) {
+        copyListaE(*l, &temp);
+        if (obtener_dniPaciente(temp) == dni_buscado) {
+            return 1; /* Paciente hallado */
+        }
+        forwardsListaE(l);
+    }
+    return 0; /* No encontrado */
+}
+
+/* Funcion de consulta para saber si un DNI ya esta registrado */
+int existePaciente(ListaE_Paciente l, long dni_buscado) {
+    return buscarPacientePorDni(&l, dni_buscado);
+}
+
+
+ /*                      consignas de chel jijo                     */
+
+void buscarfechalibre(Fecha agenda[]){
+    printf("---A continuacion se solicitara una fecha para analizar si hay turnos disponibles.---\n");
+    int mesB, diaB;
+    printf("Ingrese el mes que desea inspeccionar (solo con ): ");
+    scanf("%d", &mesB);
+
+    //              control antes de inspeccionar la lista              //
+    while(mesB != 11 && mesB != 12){
+        printf("[ERROR] no ingreso un MES valido. Intente nuevamente (solo con NOVIEMBRE o DICIEMBRE): ");
+        scanf("%d", &mesB);
+    }
+    printf("Ingrese el dia que desea inspeccionar: ");
+    scanf("%d", &diaB);
+
+    //              control antes de inspeccionar la lista              //
+    if(mesB==11){
+        while(diaB<1 || diaB>30){
+            printf("[ERROR] no ingreso un DIA valido. Intente nuevamente (NOVIEMBRE tiene 1-30 dias): ");
+            scanf("%d", &diaB);
+        }
+    }
+    else{
+        while(diaB<1 || diaB>31){
+            printf("[ERROR] no ingreso un DIA valido. Intente nuevamente (DICIEMBRE tiene 1-31 dias): ");
+            scanf("%d", &diaB);
+        }
+    }
+
+    int i, encontrados;
+    encontrados = 0;
+    printf("Los turnos disponibles para esa fecha son: ");
+    for(i=0; i<Tagenda; i++){
+        if(get_mes(agenda[i]) == diaB && get_mes(agenda[i]) == mesB){
+            if(get_disponible(agenda[i]) == 'L'){
+                printf("ID del turno: %d\n", i+1);
+                printf("Dia: %d\n", get_dia(agenda[i]));
+                printf("Mes: %d\n", get_mes(agenda[i]));
+                printf("Hora: %02d:%02d\n", get_hora(agenda[i]), get_minuto(agenda[i]));
+                encontrados++;
+            }
+        }
+    }
+    if(encontrados==0){
+        printf("No se han encontrado turnos libres para esa fecha.");
+    }
+}
+
+//                        consigna d                       //
+
+void buscarfechaocupada(Fecha p[]){
+    int m;
+    printf("A continuacion ingrese un mes (11 = noviembre o 12 = diciembre) para buscar las fechas ocupadas del mismo: ");
+    scanf("%d", &m);
+    while(m != 11 && m != 12){
+        printf("Error. Intente nuevamente con 11 = NOVIEMBRE o 12 = DICIEMBRE: ");
+        scanf("%d", &m);
+    }
+    int i, encontrados;
+    encontrados=0;
+    printf("Los turnos NO disponibles del mes son: ");
+    for(i=0 ; i<Tagenda ; i++){
+        if(m == get_mes(p[i])){
+            if(get_disponible(p[i]) == 'O'){
+                printf("ID del turno: %d", i+1);
+                printf("Dia: %d", get_dia(p[i]));
+                printf("Mes: %d", get_mes(p[i]));
+                printf("Hora: %02d:%02d", get_hora(p[i]), get_minuto(p[i]));
+                encontrados++;
+            }
+        }
+    }
+    if(encontrados==0){
+        printf("No se han encontrado turnos ocupados para esa fecha.");
+    }
+
+
+}
+
+
+//              consigna e ya esta hecha en el archivo de turno creo               //
+
+//                                consigna j                                     //
+
+void guardaryeliminarturnocancelado(ListaVO_Turno *l, Turno t){
+    FILE *fp;
+    fp= fopen("turno_cancelado.txt", "a");
+    if(fp == NULL){
+        printf("Error al crear o abrir el archivo 'turno_cancelado.txt.");
+        return;
+    }
+    fprintf(fp, "Turno Cancelado - Fecha: %02d/%02d/%d | Hora: %02d:%02d Hs\\n", get_dia(t.fecha), get_mes(t.fecha), get_anio(t.fecha), get_hora(t.fecha), get_minuto(t.fecha));
+    fclose(fp);
+    suppressListaVO(l);
+}
+
+
+
+
+//                           consigna s                              //
+void backup(ListaVO_Turno l1, ListaE_Paciente l2, Fecha a[]){
+
+//           Empezamos con turno.txt             //
+    Turno t;
+    FILE *ft;
+    ft= fopen("turno.txt", "w");
+    if(ft == NULL){
+        printf("Error al crear o abrir el archivo 'turno.txt'.");
+        return;
+    }
+    resetListaVO(&l1);
+    while(!isOosListaVO(l1)){
+        copyListaVO(l1, &t);
+        fprintf(ft, "Turno: %d.\n D.N.I. del paciente: %ld.\n Monto: %f.\n Mutual: %s.\n Fecha: %02d/%02d/%d | Hora: %02d:%02d Hs.\n Estado: %d\n %c\n\n", obtener_idTurno(t), obtener_dniPaciente(t), obtener_monto(t), t.mutual, get_dia(t.fecha), get_mes(t.fecha), get_anio(t.fecha), get_hora(t.fecha), get_minuto(t.fecha), obtener_estadoTurno(t), get_disponible(t.fecha));
+        forwardsListaVO(&l1);
+    }
+    fclose(ft);
+    printf("Respaldo completado con exito en 'turno.txt'.\n");
+
+//           2- pacientes.txt                        //
+    Paciente p;
+    FILE *fp;
+    fp= fopen("paciente.txt", "w");
+    if(fp == NULL){
+        printf("Error al crear o abrir el archivo 'paciente.txt'.\n");
+        return;
+    }
+    resetListaE(&l2);
+    while(!isOosListaE(l2)){
+        copyListaE(l2, &p);
+        fprintf(fp, "Nombre: %s.\n Apellido: %s.\n D.N.I: %ld.\n Obra social: %d.\n\n", p.nombre, p.apellido, obtener_dniPaciente(p), obtener_osocialPaciente(p));
+        forwardsListaE(&l2);
+    }
+    fclose(fp);
+    printf("Respaldo completado con exito en 'paciente.txt'.\n\n");
+
+
+//           Y agenda.txt                                  //
+    FILE *fa;
+    fa= fopen("agenda.txt", "w");
+    if(fa == NULL){
+        printf("Error al crear o abrir el archivo 'agenda.txt'.\n");
+        return;
+    }
+    int i;
+    for(i=0;i<Tagenda;i++){
+        fprintf("Dia: %02d.\n Mes: %02d.\n Anio: %d.\n Horario: %02d:%02d.\n Disponibilidad: '%c'\n\n", get_dia(a[i]), get_mes(a[i]), get_anio(a[i]), get_hora(a[i]), get_minuto(a[i]), get_disponible(a[i]));
+    }
+    fclose(fa);
+    printf("Respaldo completado con exito en 'agenda.txt'.\n\n");
+
 }

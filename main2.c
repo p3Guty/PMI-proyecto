@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "listaE_pacientes.h"
+#include "fecha.h"
+#include "turno.h"
+#include "listaVO_turno.h"
+#include "agenda.h"
+#include "pacientes.h"
 
 //funciones de turno y listaVOturno
 void menu_cancelarTurno(ListaVO_Turno *l) {
@@ -100,5 +106,16 @@ void menu_compararFechasInteractivo(void) {
     }
 
     printf("===========================================================\n");
+
+    /* 
+main(){
+//--------------acá se define la agenda---------------//
+
+Fecha agenda[Tagenda];
+llenaragenda(&agenda);  // y listo ahr //
+
+
+} */
+
 }
 
