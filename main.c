@@ -381,7 +381,7 @@ void backup(ListaVO_Turno l1, ListaE_Paciente l2, Fecha a[]){
     resetListaVO(&l1);
     while(!isOosListaVO(l1)){
         copyListaVO(l1, &t);
-        fprintf(ft, "Turno: %d.\n D.N.I. del paciente: %ld.\n Monto: %f.\n Mutual: %s.\n Fecha: %02d/%02d/%d | Hora: %02d:%02d Hs.\n Estado: %d\n %c\n\n", obtener_idTurno(t), obtener_dniPaciente(t), obtener_monto(t), t.mutual, get_dia(t.fecha), get_mes(t.fecha), get_anio(t.fecha), get_hora(t.fecha), get_minuto(t.fecha), obtener_estadoTurno(t), get_disponible(t.fecha));
+        fprintf(ft, "Turno: %d.\n D.N.I. del paciente: %ld.\n Monto: %f.\n Mutual: %s.\n Fecha: %02d/%02d/%d | Hora: %02d:%02d Hs.\n Estado: %d\n %c\n\n", obtener_idTurno(t), obtener_dniPacienteTurno(t), obtener_monto(t), t.mutual, get_dia(t.fecha), get_mes(t.fecha), get_anio(t.fecha), get_hora(t.fecha), get_minuto(t.fecha), obtener_estadoTurno(t), get_disponible(t.fecha));
         forwardsListaVO(&l1);
     }
     fclose(ft);
