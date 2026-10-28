@@ -6,6 +6,7 @@
 #define Tagenda 390 //es el tamanio de la agenda, la cantidad de turnos de nov y dic.
 
 /*---------------Para la agenda-------------*/
+/*consigna O*/
 
 void llenaragenda(Fecha ag[]){
     int i; //indice de la agenda                            (este tambien es el id_turno !!)

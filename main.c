@@ -10,6 +10,99 @@
 #include "pacientes.h"
 
 
+void cargarPacienteMenu(ListaE_Paciente *listaP) {
+    long int dniIngresado;
+    char nombreIngresado[15];
+    char apellidoIngresado[15];
+    int osocialIngresada;
+    int existe = 0;
+    Paciente pCopia;
+    Paciente nuevoPaciente;
+
+    printf("\n=== [OPCION n] CARGAR NUEVO PACIENTE ===\n");
+
+    if (isFullListaE(*listaP)) {
+        printf("Error: La lista de pacientes esta llena. No se pueden agregar mas registros.\n");
+        return;
+    }
+
+    printf("Ingrese el DNI del paciente: ");
+    scanf("%ld", &dniIngresado);
+
+    resetListaE(listaP);
+    while (!isOosListaE(*listaP) && !existe) {
+        copyListaE(*listaP, &pCopia);
+        if (obtener_dniPaciente(pCopia) == dniIngresado) {
+            existe = 1;
+        } else {
+            forwardsListaE(listaP);
+        }
+    }
+    if (existe) {
+        printf("Error: Ya existe un paciente con el DNI %ld.\n", dniIngresado);
+        return;
+    }
+
+    printf("Ingrese Nombre: ");
+    scanf(" %14[^\n]", nombreIngresado);
+    printf("Ingrese Apellido: ");
+    scanf(" %14[^\n]", apellidoIngresado);
+
+    do {
+        printf("Tiene obra social? (1 = Si / 0 = No): ");
+        scanf("%d", &osocialIngresada);
+        if (osocialIngresada != 0 && osocialIngresada != 1) {
+            printf("Valor Invalido. Ingrese 1 para 'Si' o 0 para 'No'.\n");
+        }
+    } while (osocialIngresada != 0 && osocialIngresada != 1);
+
+    setDni(&nuevoPaciente, dniIngresado);
+    setNombre(&nuevoPaciente, nombreIngresado);
+    setApellido(&nuevoPaciente, apellidoIngresado);
+    setOsocial(&nuevoPaciente, osocialIngresada);
+
+    insertListaE(listaP, nuevoPaciente);
+    printf("Exito! El paciente con DNI %ld ha sido registrado correctamente.\n", dniIngresado);
+}
+
+void eliminarPacienteMenu(ListaE_Paciente *listaP, ListaVO_Turno listaT) {
+    long int dniIngresado;
+    int encontrado = 0;
+    Paciente pCopia;
+
+    printf("\n=== [OPCION n] ELIMINAR PACIENTE ===\n");
+
+    if (isEmptyListaE(*listaP)) {
+        printf("Aviso: No hay pacientes registrados en el sistema.\n");
+        return;
+    }
+
+    printf("Ingrese el DNI del paciente a eliminar: ");
+    scanf("%ld", &dniIngresado);
+
+    resetListaE(listaP);
+    while (!isOosListaE(*listaP) && !encontrado) {
+        copyListaE(*listaP, &pCopia);
+        if (obtener_dniPaciente(pCopia) == dniIngresado) {
+            encontrado = 1;
+        } else {
+            forwardsListaE(listaP);
+        }
+    }
+
+    if (!encontrado) {
+        printf("Aviso: No se encontro ningun paciente registrado con el DNI %ld.\n", dniIngresado);
+        return;
+    }
+
+    if (tieneTurnosDni(listaT, dniIngresado)) {
+        printf("Error: El paciente con DNI %ld posee turnos asignados. Debe cancelar sus turnos antes de eliminarlo.\n", dniIngresado);
+        return;
+    }
+
+    suppressListaE(listaP);
+    printf("Exito! El paciente con el DNI %ld ha sido eliminado del sistema.\n", dniIngresado);
+}
 //FUNCIONES DE TURNO Y LISTAVOTURNO
 
 /* -------------------------------------------------------------------------
@@ -268,6 +361,7 @@ int existePaciente(ListaE_Paciente l, long dni_buscado) {
 
 
  /*                      consignas de chel jijo                     */
+
 
 void buscarfechalibre(Fecha agenda[]){
     printf("---A continuacion se solicitara una fecha para analizar si hay turnos disponibles.---\n");
