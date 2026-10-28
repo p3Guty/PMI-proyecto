@@ -45,7 +45,7 @@ void modificar_fechaTurno(Turno *t, Fecha f);
 void modificar_estadoTurno(Turno *t, int estado);
 
 int obtener_idTurno(Turno t);
-long obtener_dniPaciente(Turno t);
+long obtener_dniPacienteTurno(Turno t);
 float obtener_monto(Turno t);
 void obtener_mutual(Turno t, char *destino);
 Fecha obtener_fechaTurno(Turno t);
@@ -146,7 +146,7 @@ int obtener_idTurno(Turno t) {
     return t.id_turno;
 }
 
-long obtener_dniPaciente(Turno t) {
+long obtener_dniPacienteTurno(Turno t) {
     return t.dni_paciente;
 }
 

@@ -21,32 +21,29 @@ typedef struct {
     Paciente elementos[MAX_PACIENTES];
     int cant; /* Cantidad de pacientes guardados actualmente */
     int cur;  /* Indice del cursor activo (-1 si isOos) */
-} ListaEPaciente;
+} ListaE_Paciente;
 
 /* PROTOTIPOS DE LAS PRIMITIVAS */
-void initListaE(ListaEPaciente *l);
-int isEmptyListaE(ListaEPaciente l);
-int isFullListaE(ListaEPaciente l);
-void resetListaE(ListaEPaciente *l);
-void forwardsListaE(ListaEPaciente *l);
-int isOosListaE(ListaEPaciente l);
-int copyListaE(ListaEPaciente l, Paciente *destino);
-int insertListaE(ListaEPaciente *l, Paciente elem);
-int suppressListaE(ListaEPaciente *l);
-
-int buscarPacientePorDni(ListaEPaciente *l, long dni_buscado);
-int existePaciente(ListaEPaciente l, long dni_buscado);
+void initListaE(ListaE_Paciente *l);
+int isEmptyListaE(ListaE_Paciente l);
+int isFullListaE(ListaE_Paciente l);
+void resetListaE(ListaE_Paciente *l);
+void forwardsListaE(ListaE_Paciente *l);
+int isOosListaE(ListaE_Paciente l);
+int copyListaE(ListaE_Paciente l, Paciente *destino);
+int insertListaE(ListaE_Paciente *l, Paciente elem);
+int suppressListaE(ListaE_Paciente *l);
 
 /* =========================================================================
  * IMPLEMENTACION DE LAS FUNCIONES PRIMITIVAS DE LA LISTA
  * ========================================================================= */
 
-void initListaE(ListaEPaciente *l) {
+void initListaE(ListaE_Paciente *l) {
     l->cant = 0;
     l->cur = -1;
 }
 
-int isEmptyListaE(ListaEPaciente l) {
+int isEmptyListaE(ListaE_Paciente l) {
     if (l.cant == 0) {
         return 1;
     } else {
@@ -54,7 +51,7 @@ int isEmptyListaE(ListaEPaciente l) {
     }
 }
 
-int isFullListaE(ListaEPaciente l) {
+int isFullListaE(ListaE_Paciente l) {
     if (l.cant == MAX_PACIENTES) {
         return 1;
     } else {
@@ -62,7 +59,7 @@ int isFullListaE(ListaEPaciente l) {
     }
 }
 
-void resetListaE(ListaEPaciente *l) {
+void resetListaE(ListaE_Paciente *l) {
     if (l->cant > 0) {
         l->cur = 0;
     } else {
@@ -70,21 +67,21 @@ void resetListaE(ListaEPaciente *l) {
     }
 }
 
-void forwardsListaE(ListaEPaciente *l) {
+void forwardsListaE(ListaE_Paciente *l) {
     if (l->cur >= 0 && l->cur < l->cant) {
         l->cur++;
     }
 }
 
-int isOosListaE(ListaEPaciente l) {
-    if (l->cur < 0 || l->cur >= l->cant) {
+int isOosListaE(ListaE_Paciente l) {
+    if (l.cur < 0 || l.cur >= l.cant) {
         return 1;
     } else {
         return 0;
     }
 }
 
-int copyListaE(ListaEPaciente l, Paciente *destino) {
+int copyListaE(ListaE_Paciente l, Paciente *destino) {
     if (isOosListaE(l) == 1) {
         return 0;
     }
@@ -92,7 +89,7 @@ int copyListaE(ListaEPaciente l, Paciente *destino) {
     return 1;
 }
 
-int insertListaE(ListaEPaciente *l, Paciente elem) {
+int insertListaE(ListaE_Paciente *l, Paciente elem) {
     int i;
     int pos_insert;
 
@@ -117,7 +114,7 @@ int insertListaE(ListaEPaciente *l, Paciente elem) {
     return 1;
 }
 
-int suppressListaE(ListaEPaciente *l) {
+int suppressListaE(ListaE_Paciente *l) {
     int i;
     int pos_suppress;
 
@@ -141,30 +138,6 @@ int suppressListaE(ListaEPaciente *l) {
     }
 
     return 1;
-}
-
-/*
- * Funcion: buscarPacientePorDni
- * Propósito: Recorre la lista buscando un paciente por su DNI.
- * Retorno: 1 si lo encuentra (cur queda parado en el elemento), 0 si no existe.
- */
-int buscarPacientePorDni(ListaEPaciente *l, long dni_buscado) {
-    Paciente temp;
-    resetListaE(l);
-
-    while (isOosListaE(*l) == 0) {
-        copyListaE(*l, &temp);
-        if (obtener_dniPaciente(temp) == dni_buscado) {
-            return 1; /* Paciente hallado */
-        }
-        forwardsListaE(l);
-    }
-    return 0; /* No encontrado */
-}
-
-/* Funcion de consulta para saber si un DNI ya esta registrado */
-int existePaciente(ListaEPaciente l, long dni_buscado) {
-    return buscarPacientePorDni(&l, dni_buscado);
 }
 
 #endif // LISTAE_PACIENTES_H_INCLUDE
