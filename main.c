@@ -95,10 +95,13 @@ void eliminarPacienteMenu(ListaE_Paciente *listaP, ListaVO_Turno listaT) {
         return;
     }
 
-    if (tieneTurnosDni(listaT, dniIngresado)) {
-        printf("Error: El paciente con DNI %ld posee turnos asignados. Debe cancelar sus turnos antes de eliminarlo.\n", dniIngresado);
-        return;
-    }
+  /* 4\. Verificación de turnos asignados (Consulta a Persona 3) */
+
+  /* La función tieneTurnosDni la define Persona 3 en su TDA de Turnos */
+  if (tieneTurnosDni(listaT, dniIngresado)) {
+    printf("Error: El paciente con DNI %ld posee turnos asignados. Debe cancelar sus turnos antes de eliminarlo.\n", dniIngresado);
+    return;
+  }
 
     suppressListaE(listaP);
     printf("Exito! El paciente con el DNI %ld ha sido eliminado del sistema.\n", dniIngresado);
