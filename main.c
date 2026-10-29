@@ -12,7 +12,7 @@
 int hola;
 
 int adios;
-
+int prueba = 1;
 void cargarPacienteMenu(ListaE_Paciente *listaP) {
     long int dniIngresado;
     char nombreIngresado[15];
