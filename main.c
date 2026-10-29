@@ -9,10 +9,6 @@
 #include "agenda.h"
 #include "pacientes.h"
 
-int hola;
-
-int adios;
-int prueba = 2;
 void cargarPacienteMenu(ListaE_Paciente *listaP) {
     long int dniIngresado;
     char nombreIngresado[15];
