@@ -134,7 +134,7 @@ void insertListaVO ( ListaVO_Turno *l, Turno t ){
         l->acc = nuevo;
         nuevo->next = l->cur;
         l->cur = nuevo;
-        l->aux = nuevo; 
+        l->aux = nuevo;
     } else {
         l->aux->next = nuevo;
         nuevo->next = l->cur;
