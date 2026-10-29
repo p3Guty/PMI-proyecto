@@ -10,6 +10,9 @@
 #include "pacientes.h"
 
 int hola;
+
+int adios;
+
 void cargarPacienteMenu(ListaE_Paciente *listaP) {
     long int dniIngresado;
     char nombreIngresado[15];
