@@ -21,8 +21,14 @@ void inicio(Fecha *p){
     (*p).dia = 1;
 }
 
+/*
+int set_dia( Fecha *p, int d ){
+    p->dia = d;
+}
+*/
+
 int set_dia(Fecha *p, int d){
-    int diasdelmes;
+    int diasdelmes;     //corregir controles y agregarlos en el main
     diasdelmes=30;
     if((*p).mes == 1 || (*p).mes == 3 || (*p).mes == 5 || (*p).mes == 7 || (*p).mes == 8 || (*p).mes == 10 || (*p).mes == 12){
             diasdelmes=31;}
@@ -85,7 +91,7 @@ int get_minuto(Fecha p){
     return p.minuto;
 }
 
-int set_disponible(Fecha *p, char d){
+int set_disponible(Fecha *p, char d){       //varios setter por corregir los controles y agregarlos en el main.c
     if(d == 'L' || d == 'O'){
             (*p).disponible= d;
             return 1;

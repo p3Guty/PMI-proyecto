@@ -18,6 +18,8 @@ void cargarPacienteMenu(ListaE_Paciente *listaP) {
     Paciente pCopia;
     Paciente nuevoPaciente;
 
+
+
     printf("\n=== [OPCION n] CARGAR NUEVO PACIENTE ===\n");
 
     if (isFullListaE(*listaP)) {
@@ -411,6 +413,8 @@ void buscarfechalibre(Fecha agenda[]){
         printf("No se han encontrado turnos libres para esa fecha.");
     }
 }
+
+Fecha agenda[390]; //cosita que pide el profe para que este bien que es solo esto en el main y lo demas es simplemente llenarla con las fechas libres
 
 //                        consigna d                       //
 

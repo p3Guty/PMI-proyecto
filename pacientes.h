@@ -5,8 +5,8 @@
  *              primitivas de lectura y modificacion sin entrada/salida.
  * ========================================================================= */
 
-#ifndef PACIENTE_H_INCLUDE
-#define PACIENTE_H_INCLUDE
+#ifndef PACIENTES_H_INCLUDE
+#define PACIENTES_H_INCLUDE
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,8 +33,8 @@ void modificar_apellidoPaciente(Paciente *p, const char *nuevo_apellido);
 void modificar_dniPaciente(Paciente *p, long nuevo_dni);
 void modificar_osocialPaciente(Paciente *p, int nueva_osocial);
 
-void obtener_nombrePaciente(Paciente p, char *destino);
-void obtener_apellidoPaciente(Paciente p, char *destino);
+char* obtener_nombrePaciente(Paciente p);
+char* obtener_apellidoPaciente(Paciente p);
 long obtener_dniPaciente(Paciente p);
 int obtener_osocialPaciente(Paciente p);
 
@@ -84,21 +84,21 @@ Paciente crearPaciente(const char *nombre, const char *apellido, long dni, int o
 /* SETTERS (MODIFICADORES) */
 
 void modificar_nombrePaciente(Paciente *p, const char *nuevo_nombre) {
-    if (nuevo_nombre != NULL) {
+    //if (nuevo_nombre != NULL) {
         strcpy(p->nombre, nuevo_nombre);
-    }
+    //}
 }
 
 void modificar_apellidoPaciente(Paciente *p, const char *nuevo_apellido) {
-    if (nuevo_apellido != NULL) {
+    //if (nuevo_apellido != NULL) {
         strcpy(p->apellido, nuevo_apellido);
-    }
+    //}
 }
 
 void modificar_dniPaciente(Paciente *p, long nuevo_dni) {
-    if (nuevo_dni > 0) {
+    //if (nuevo_dni > 0) {
         p->dni = nuevo_dni;
-    }
+    //}
 }
 
 void modificar_osocialPaciente(Paciente *p, int nueva_osocial) {
@@ -111,16 +111,25 @@ void modificar_osocialPaciente(Paciente *p, int nueva_osocial) {
 
 /* GETTERS (CONSULTORES) */
 
-void obtener_nombrePaciente(Paciente p, char *destino) {
-    if (destino != NULL) {
+char* obtener_nombrePaciente(Paciente p) {
+    /*if (destino != NULL) {
         strcpy(destino, p.nombre);
-    }
+    }*/
+
+    char *nombre_a_retornar = (char *) malloc( strlen( p.nombre ) + 1 );
+    if (nombre_a_retornar == NULL ) exit(1);
+    strcpy( nombre_a_retornar, p.nombre );
+    return nombre_a_retornar; 
 }
 
-void obtener_apellidoPaciente(Paciente p, char *destino) {
-    if (destino != NULL) {
+char* obtener_apellidoPaciente(Paciente p) {
+    /*if (destino != NULL) {
         strcpy(destino, p.apellido);
-    }
+    }*/
+   char *nombre_a_retornar = (char *) malloc( strlen( p.apellido ) + 1 );
+    if (nombre_a_retornar == NULL ) exit(1);
+    strcpy( nombre_a_retornar, p.apellido );
+    return nombre_a_retornar; 
 }
 
 long obtener_dniPaciente(Paciente p) {
@@ -131,4 +140,4 @@ int obtener_osocialPaciente(Paciente p) {
     return p.osocial;
 }
 
-#endif // PACIENTE_H_INCLUDE
+#endif // PACIENTES_H_INCLUDE

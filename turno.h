@@ -67,6 +67,7 @@ void initTurno(Turno *t) {
     t->monto = 0.0f;
     strcpy(t->mutual, "Sin Mutual");
     t->estado = ESTADO_SOLICITADO;
+    inicio( &t->fecha );
 }
 
 /*
@@ -119,13 +120,13 @@ void modificar_dniPaciente(Turno *t, long dni) {
 }
 
 void modificar_monto(Turno *t, float monto) {
-    if (monto >= 0.0f) {
+    if (monto >= 0.0f) {        //realizar controles en el main.c (*)
         t->monto = monto;
     }
 }
 
 void modificar_mutual(Turno *t, const char *mutual) {
-    if (mutual != NULL) {
+    if (mutual != NULL) { // (*)
         strcpy(t->mutual, mutual);
     }
 }
@@ -135,7 +136,7 @@ void modificar_fechaTurno(Turno *t, Fecha f) {
 }
 
 void modificar_estadoTurno(Turno *t, int estado) {
-    if (estado >= 1 && estado <= 4) {
+    if (estado >= 1 && estado <= 4) { //(*)
         t->estado = estado;
     }
 }
@@ -155,7 +156,7 @@ float obtener_monto(Turno t) {
 }
 
 void obtener_mutual(Turno t, char *destino) {
-    if (destino != NULL) {
+    if (destino != NULL) {  //(*)
         strcpy(destino, t.mutual);
     }
 }

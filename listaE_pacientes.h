@@ -30,9 +30,9 @@ int isFullListaE(ListaE_Paciente l);
 void resetListaE(ListaE_Paciente *l);
 void forwardsListaE(ListaE_Paciente *l);
 int isOosListaE(ListaE_Paciente l);
-int copyListaE(ListaE_Paciente l, Paciente *destino);
-int insertListaE(ListaE_Paciente *l, Paciente elem);
-int suppressListaE(ListaE_Paciente *l);
+Paciente copyListaE(ListaE_Paciente l);
+void insertListaE(ListaE_Paciente *l, Paciente elem);
+void suppressListaE(ListaE_Paciente *l);
 
 /* =========================================================================
  * IMPLEMENTACION DE LAS FUNCIONES PRIMITIVAS DE LA LISTA
@@ -68,9 +68,9 @@ void resetListaE(ListaE_Paciente *l) {
 }
 
 void forwardsListaE(ListaE_Paciente *l) {
-    if (l->cur >= 0 && l->cur < l->cant) {
+    //if (l->cur >= 0 && l->cur < l->cant) {  //control que hay que hacer en el main
         l->cur++;
-    }
+    //}
 }
 
 int isOosListaE(ListaE_Paciente l) {
@@ -81,63 +81,65 @@ int isOosListaE(ListaE_Paciente l) {
     }
 }
 
-int copyListaE(ListaE_Paciente l, Paciente *destino) {
-    if (isOosListaE(l) == 1) {
+Paciente copyListaE(ListaE_Paciente l) {
+    /*if (isOosListaE(l) == 1) {
         return 0;
-    }
-    *destino = l.elementos[l.cur];
-    return 1;
+    }*/                     //poner en el main.c
+    //*destino = l.elementos[l.cur];
+    //return 1;
+    return l.elementos[l.cur];
 }
 
-int insertListaE(ListaE_Paciente *l, Paciente elem) {
+void insertListaE(ListaE_Paciente *l, Paciente elem) {
     int i;
-    int pos_insert;
+    int pos_insert; //no hace falta esto 
 
-    if (isFullListaE(*l) == 1) {
-        return 0; /* Fallo: Lista llena */
+    /* if (isFullListaE(*l) == 1) {
+        return 0;  Fallo: Lista llena 
     }
-
+                                
     if (isOosListaE(*l) == 1) {
         pos_insert = l->cant;
     } else {
         pos_insert = l->cur;
     }
+    */
 
-    /* Desplazamiento a la derecha */
-    for (i = l->cant; i > pos_insert; i--) {
-        l->elementos[i] = l->elementos[i - 1];
+    /* Desplazamiento a la derecha */ //forma correcta por el profe
+    if( isEmptyListaE( *l ) ) l->cur++;
+    else {
+        for (i = l->cant; i > l->cur ; i--) {
+            l->elementos[i] = l->elementos[i - 1];
+        }
     }
-
-    l->elementos[pos_insert] = elem;
+    l->elementos[ l->cur++] = elem;
     l->cant++;
-    l->cur = pos_insert;
-    return 1;
+    //l->cur = pos_insert;
 }
 
-int suppressListaE(ListaE_Paciente *l) {
+void suppressListaE(ListaE_Paciente *l) {
     int i;
-    int pos_suppress;
+    //int pos_suppress;
 
-    if (isOosListaE(*l) == 1 || isEmptyListaE(*l) == 1) {
+    /*if (isOosListaE(*l) == 1 || isEmptyListaE(*l) == 1) {
         return 0;
-    }
+    }*/                             //forma incorrecta
 
-    pos_suppress = l->cur;
+    //pos_suppress = l->cur;
 
-    /* Desplazamiento a la izquierda */
-    for (i = pos_suppress; i < l->cant - 1; i++) {
+    /* Desplazamiento a la izquierda */  //esto esta bien 
+    for (i = l->cur; i < l->cant - 1; i++) {
         l->elementos[i] = l->elementos[i + 1];
     }
 
     l->cant--;
-
+    /*
     if (l->cant == 0) {
         l->cur = -1;
-    } else if (l->cur >= l->cant) {
+    } else if (l->cur >= l->cant) {             //demas todo esto
         l->cur = l->cant - 1;
-    }
+    }*/
 
-    return 1;
 }
 
 #endif // LISTAE_PACIENTES_H_INCLUDE
