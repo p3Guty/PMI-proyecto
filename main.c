@@ -9,7 +9,7 @@
 #include "agenda.h"
 #include "pacientes.h"
 
-
+int hola;
 void cargarPacienteMenu(ListaE_Paciente *listaP) {
     long int dniIngresado;
     char nombreIngresado[15];
