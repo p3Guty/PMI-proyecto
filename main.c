@@ -364,6 +364,30 @@ int existePaciente(ListaE_Paciente l, long dni_buscado) {
 
  /*                      consignas de chel jijo                     */
 
+ /----------------------Llenamiento de agenda con llenaragenda.txt----------------------//
+
+void llenaragenda(Fecha agendita[]){
+    int i; //indice de la agenda                            (este tambien es el id_turno !!)
+    i=0;
+    FILE fa;
+fa=fopen("llenaragenda.txt", "r");
+if(fa == NULL){
+    printf("Error. No se pudo abrir el archivo 'llenaragenda.txt'.\n\n");
+}
+else{
+    int d, m, h, min, a;
+    char dispo;
+
+    while(i < Tagenda && fscanf(fp, "Dia: %02d.\n Mes: %02d.\n Anio: %d.\n Horario: %02d:%02d.\n Disponibilidad: '%c'\n\n", &d, &m, &a, &h, &min, &dispo)== 6){
+        set_fecha(&agenda[i], d, m, h, min, dispo);
+        i++;
+    }
+    printf("Agenda iniciada con exito.");
+}
+}
+
+
+ //                            consigna b                            //
 
 void buscarfechalibre(Fecha agenda[]){
     printf("---A continuacion se solicitara una fecha para analizar si hay turnos disponibles.---\n");
