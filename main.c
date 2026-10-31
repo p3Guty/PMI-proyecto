@@ -59,10 +59,10 @@ void cargarPacienteMenu(ListaE_Paciente *listaP) {
         }
     } while (osocialIngresada != 0 && osocialIngresada != 1);
 
-    modificar_dniPaciente(&nuevoPaciente, dniIngresado);
-    modificar_nombrePaciente(&nuevoPaciente, nombreIngresado);
-    modificar_apellidoPaciente(&nuevoPaciente, apellidoIngresado);
-    modificar_osocialPaciente(&nuevoPaciente, osocialIngresada);
+    setDni(&nuevoPaciente, dniIngresado);
+    setNombre(&nuevoPaciente, nombreIngresado);
+    setApellido(&nuevoPaciente, apellidoIngresado);
+    setOsocial(&nuevoPaciente, osocialIngresada);
 
     insertListaE(listaP, nuevoPaciente);
     printf("Exito! El paciente con DNI %ld ha sido registrado correctamente.\n", dniIngresado);
@@ -100,8 +100,8 @@ void eliminarPacienteMenu(ListaE_Paciente *listaP, ListaVO_Turno listaT) {
 
   /* 4\. Verificación de turnos asignados (Consulta a Persona 3) */
 
-  /* La validacion de turnos depende del TDA de turnos. */
-  if (0) {
+  /* La función tieneTurnosDni la define Persona 3 en su TDA de Turnos */
+  if (tieneTurnosDni(listaT, dniIngresado)) {
     printf("Error: El paciente con DNI %ld posee turnos asignados. Debe cancelar sus turnos antes de eliminarlo.\n", dniIngresado);
     return;
   }
@@ -120,7 +120,7 @@ int buscarTurnoPorId(ListaVO_Turno *l, int id_buscado) {
 
     resetListaVO(l);
     while (isOosListaVO(*l) == 0) {
-        copyListaVO(*l, &temp);
+        temp = copyListaVO(*l);
         if (obtener_idTurno(temp) == id_buscado) {
             return 1; /* Coincidencia hallada: cur posicionado */
         }
@@ -137,7 +137,7 @@ int cancelarTurnoEnLista(ListaVO_Turno *l, int id_buscado) {
     Turno temp;
 
     if (buscarTurnoPorId(l, id_buscado) == 1) {
-        copyListaVO(*l, &temp);
+        temp = copyListaVO(*l);
 
         /* Validacion previa de estado */
         if (obtener_estadoTurno(temp) == ESTADO_CANCELADO) {
@@ -165,7 +165,7 @@ int confirmarTurnoEnLista(ListaVO_Turno *l, int id_buscado) {
     Turno temp;
 
     if (buscarTurnoPorId(l, id_buscado) == 1) {
-        copyListaVO(*l, &temp);
+        temp = copyListaVO(*l);
 
         if (obtener_estadoTurno(temp) == ESTADO_CONFIRMADO) {
             printf("\n[AVISO] El turno ID %d ya habia sido CONFIRMADO previamente.\n", id_buscado);
@@ -284,7 +284,7 @@ float calcularMontoMes(ListaVO_Turno l, int mes) {
     resetListaVO(&l);
 
     while (isOosListaVO(l) == 0) {
-        copyListaVO(l, &t);
+        t = copyListaVO(l);
         f = obtener_fechaTurno(t);
         if (f.mes == mes && obtener_estadoTurno(t) == ESTADO_ATENDIDO) {
             total = total + obtener_monto(t);
@@ -482,7 +482,7 @@ void backup(ListaVO_Turno l1, ListaE_Paciente l2, Fecha a[]){
     }
     resetListaVO(&l1);
     while(!isOosListaVO(l1)){
-        copyListaVO(l1, &t);
+        t = copyListaVO(l1);
         fprintf(ft, "Turno: %d.\n D.N.I. del paciente: %ld.\n Monto: %f.\n Mutual: %s.\n Fecha: %02d/%02d/%d | Hora: %02d:%02d Hs.\n Estado: %d\n %c\n\n", obtener_idTurno(t), obtener_dniPacienteTurno(t), obtener_monto(t), t.mutual, get_dia(t.fecha), get_mes(t.fecha), get_anio(t.fecha), get_hora(t.fecha), get_minuto(t.fecha), obtener_estadoTurno(t), get_disponible(t.fecha));
         forwardsListaVO(&l1);
     }
@@ -525,87 +525,87 @@ void backup(ListaVO_Turno l1, ListaE_Paciente l2, Fecha a[]){
 //                          consigna t                              //
 void cargarbackup(ListaVO_Turno *l1, ListaE_Paciente *l2, Fecha agenda[]){
 
-//--------------cargar desde turnos.txt a lista de turnos----------------//
-FILE *ft;
-ft= fopen("turnos.txt", "r");
-if(ft == NULL){
-    printf("Error al abrir el archivo 'turnos.txt'.\n");
-    return;
-}
-else{
-    Turno t;
-    int id, estado;
-    Fecha f;
-    float monto;
-    char mutual[MAX_MUTUAL];
-    long int dni;
-    int cant;
-    cant=0;
-
-    resetListaVO(l1);
-
-    while (fscanf(ft, "Turno: %d.\\n D.N.I. del paciente: %ld.\\n Monto: %f.\\n Mutual: %s.\\n Fecha: %d/%d/%d | Hora: %d:%d Hs.\\n Estado: %d\\n Disponibilidad: %c\\n\\n", &id, &dni, &monto, mutual, &f.dia, &f.mes, &f.anio, &f.hora, &f.minuto, &estado, &f.disponible) == 11){
-        modificar_idTurno(&t, id);
-        modificar_dniTurno(&t, dni);
-        modificar_monto(&t, monto);
-        modificar_mutual(&t, mutual);
-        modificar_fechaTurno(&t, f);
-        modificar_estadoTurno(&t, estado);
-
-        insertListaVO(l1, t);
-        cant++;
+    //--------------cargar desde turnos.txt a lista de turnos----------------//
+    FILE *ft;
+    ft= fopen("turnos.txt", "r");
+    if(ft == NULL){
+        printf("Error al abrir el archivo 'turnos.txt'.\n");
+        return;
     }
-    fclose(ft);
-    printf("%d turnos de 'turnos.txt' cargados con exito en la lista. \n\n", cant);
-}
+    else{
+        Turno t;
+        int id, estado;
+        Fecha f;
+        float monto;
+        char mutual[MAX_MUTUAL];
+        long int dni;
+        int cant;
+        cant=0;
 
-//--------------cargar desde pacientes.txt a lista de pacientes----------------//
-FILE *fp;
-fp= fopen("pacient.txt", "r");
-if(fp == NULL){
-    printf("Error: no se pudo abrir el archivo 'paciente.txt'.\n\n");
-    return;
-}
-else{
-    Paciente p;
-    char n[MAX_CADENA];
-    char a[MAX_CADENA];
-    long dni;
-    int oso;
-    int cant;
+        resetListaVO(l1);
 
-    resetListaE(l2);
+        while (fscanf(ft, "Turno: %d.\n D.N.I. del paciente: %ld.\n Monto: %f.\n Mutual: %s.\n Fecha: %d/%d/%d | Hora: %d:%d Hs.\n Estado: %d\n Disponibilidad: %c\n\n", &id, &dni, &monto, mutual, &f.dia, &f.mes, &f.anio, &f.hora, &f.minuto, &estado, &f.disponible) == 11){
+            modificar_idTurno(&t, id);
+            modificar_dniPaciente(&t, dni);
+            modificar_monto(&t, monto);
+            modificar_mutual(&t, mutual);
+            modificar_fechaTurno(&t, f);
+            modificar_estadoTurno(&t, estado);
 
-    while(fscanf(fp, "Nombre: %s.\n Apellido: %s.\n D.N.I: %ld.\n Obra social: %d.\n\n", n, a, &dni, &oso)== 4){
-        modificar_nombrePaciente(&p, n);
-        modificar_apellidoPaciente(&p, a);
-        modificar_dniPaciente(&p, dni);
-        modificar_osocialPaciente(&p, oso);
-
-        insertListaE(l2, p);
-        cant++;
+            insertListaVO(l1, t);
+            cant++;
+        }
+        fclose(ft);
+        printf("%d turnos de 'turnos.txt' cargados con exito en la lista. \n\n", cant);
     }
-    fclose(fp);
-    printf("%d datos de pacientes de 'paciente.txt' cargados con exito en la lista. \n\n", cant);
-}
 
-//--------------cargar desde agenda.txt a la agenda----------------//
-FILE *fa;
-fa=fopen("agenda.txt", "r");
-if(fa == NULL){
-    printf("Error. No se pudo abrir el archivo 'agenda.txt'.\n\n");
-}
-else{
-    int d, m, h, min, a, i;
-    char dispo;
-    i=0;
-
-    while(i < Tagenda && fscanf(fa, "Dia: %02d.\n Mes: %02d.\n Anio: %d.\n Horario: %02d:%02d.\n Disponibilidad: '%c'\n\n", &d, &m, &a, &h, &min, &dispo)== 6){
-        set_fecha(&agenda[i], d, m, h, min, dispo);
-        i++;
+    //--------------cargar desde pacientes.txt a lista de pacientes----------------//
+    FILE *fp;
+    fp= fopen("paciente.txt", "r");
+    if(fp == NULL){
+        printf("Error: no se pudo abrir el archivo 'paciente.txt'.\n\n");
+        return;
     }
-    fclose(fa);
-    printf("Agenda cargada con exito con las fechas de 'agenda.txt' (%d fechas).", i+1);
+    else{
+        Paciente p;
+        char n[MAX_CADENA];
+        char a[MAX_CADENA];
+        long dni;
+        int oso;
+        int cant;
+
+        resetListaE(l2);
+
+        while(fscanf(fp, "Nombre: %s.\n Apellido: %s.\n D.N.I: %ld.\n Obra social: %d.\n\n", n, a, &dni, &oso)== 4){
+            modificar_nombrePaciente(&p, n[]);
+            modificar_apellidoPaciente(&p, a[]);
+            modificar_dniPaciente(&p, dni);
+            modificar_osocialPaciente(&p, oso);
+
+            insertListaE(l2, p);
+            cant++;
+        }
+        fclose(l2);
+        printf("%d datos de pacientes de 'paciente.txt' cargados con exito en la lista. \n\n", cant);
+    }
+
+    //--------------cargar desde agenda.txt a la agenda----------------//
+    FILE *fa;
+    fa=fopen("agenda.txt", "r");
+    if(fa == NULL){
+        printf("Error. No se pudo abrir el archivo 'agenda.txt'.\n\n");
+    }
+    else{
+        int d, m, h, min, a, i;
+        char dispo;
+        i=0;
+
+        while(i < Tagenda && fscanf(fp, "Dia: %02d.\n Mes: %02d.\n Anio: %d.\n Horario: %02d:%02d.\n Disponibilidad: '%c'\n\n", &d, &m, &a, &h, &min, &dispo)== 6){
+            set_fecha(&agenda[i], d, m, h, min, dispo);
+            i++;
+        }
+        printf("Agenda cargada con exito con las fechas de 'agenda.txt' (%d fechas).", i+1);
+    }
+    //-----------fin----------//
 }
-//-----------fin----------//
-}
+

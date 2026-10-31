@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "fecha.h"
+#include "turno.h"
+#include "listaVO_turno.h"
 #define Tagenda 390 //es el tamanio de la agenda, la cantidad de turnos de nov y dic.
 
 /*---------------Para la agenda-------------*/
