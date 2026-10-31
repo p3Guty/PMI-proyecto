@@ -35,7 +35,7 @@ int isFullListaVO(ListaVO_Turno l);
 void resetListaVO(ListaVO_Turno *l);
 void forwardsListaVO(ListaVO_Turno *l);
 int isOosListaVO(ListaVO_Turno l);
-int copyListaVO(ListaVO_Turno l,);
+int copyListaVO(ListaVO_Turno l, Turno *destino);
 int insertListaVO(ListaVO_Turno *l, Turno elem);
 int suppressListaVO(ListaVO_Turno *l);
 
@@ -116,8 +116,12 @@ int isOosListaVO(ListaVO_Turno l) {
  * Propósito: Copia el Turno actual sobre la variable *destino sin desapilar.
  * Retorno: 1 si tuvo exito, 0 si la lista estaba vacia o cur fuera de estructura.
  */
-int copyListaVO(ListaVO_Turno l,) {
-    return l->cur->vipd;
+int copyListaVO(ListaVO_Turno l, Turno *destino) {
+    if (destino == NULL || l.cur == NULL) {
+        return 0;
+    }
+    *destino = l.cur->vipd;
+    return 1;
 }
 
 /*
@@ -127,20 +131,24 @@ int copyListaVO(ListaVO_Turno l,) {
  * Retorno: 1 si pudo asignar memoria e insertar, 0 si fallo malloc.
  */
 
-void insertListaVO ( ListaVO_Turno *l, Turno t ){
+int insertListaVO ( ListaVO_Turno *l, Turno t ){
     Nodo *nuevo = (Nodo*) malloc(sizeof(Nodo));
+    if (nuevo == NULL) {
+        return 0;
+    }
 
     if( l->cur == l->acc ){
         l->acc = nuevo;
         nuevo->next = l->cur;
         l->cur = nuevo;
-        l->aux = nuevo; 
+        l->aux = nuevo;
     } else {
         l->aux->next = nuevo;
         nuevo->next = l->cur;
         l->cur = nuevo;
     }
     l->cur->vipd = t;
+    return 1;
 }
 
 /*
@@ -151,9 +159,9 @@ void insertListaVO ( ListaVO_Turno *l, Turno t ){
 int suppressListaVO(ListaVO_Turno *l) {
     Nodo *elim;
 
-    if (isOosListaVO(*l) == 1 || isEmptyListaVO(*l) == 1) {
+    /*if (isOosListaVO(*l) == 1 || isEmptyListaVO(*l) == 1) {       //control que hay que hacer en el main.c
         return 0;
-    }
+    }*/
 
     elim = l->cur;
 
@@ -171,5 +179,19 @@ int suppressListaVO(ListaVO_Turno *l) {
     free(elim); /* Liberacion de memoria devuelta al sistema operativo */
     return 1;
 }   //corregir lo mismo que insert
+
+/*
+int suppressListaVO(ListaVO_Turno *l) { //forma correcta por el profe
+    if ( l->acc == l->cur ){
+        l->acc = l->acc->next;
+        free( l->cur );
+        l->cur = l->acc;
+        l->aux = NULL;
+    } else {
+        l->aux->next = l->cur->next;
+        free( l->cur );
+        l->cur = l->aux->next;
+    }
+}*/
 
 #endif // LISTAVO_TURNO_H_INCLUDED
