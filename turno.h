@@ -4,7 +4,6 @@
 /* Inclusion de la libreria auxiliar de Fecha */
 #include "pacientes.h"
 #include "fecha.h"
-#include "agenda.h"
 
 /* Inclusión de librerias estandar para manejo de cadenas y memoria */
 #include <stdio.h>
@@ -38,7 +37,7 @@ void initTurno(Turno *t);
 Turno crearTurno(int id, long dni, float monto, const char *mutual, Fecha f, int estado);
 
 void modificar_idTurno(Turno *t, int id);
-void modificar_dniPaciente(Turno *t, long dni);
+void modificar_dniPacienteTurno(Turno *t, long dni);
 void modificar_monto(Turno *t, float monto);
 void modificar_mutual(Turno *t, const char *mutual);
 void modificar_fechaTurno(Turno *t, Fecha f);
@@ -113,7 +112,7 @@ void modificar_idTurno(Turno *t, int id) {
     t->id_turno = id;
 }
 
-void modificar_dniTurno(Turno *t, long dni) {
+void modificar_dniPacienteTurno(Turno *t, long dni) {
     if (dni > 0) {
         t->dni_paciente = dni;
     }

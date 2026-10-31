@@ -1,6 +1,8 @@
 #ifndef LISTAVO_TURNO_H_INCLUDED
 #define LISTAVO_TURNO_H_INCLUDED
 
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "turno.h"
@@ -35,9 +37,9 @@ int isFullListaVO(ListaVO_Turno l);
 void resetListaVO(ListaVO_Turno *l);
 void forwardsListaVO(ListaVO_Turno *l);
 int isOosListaVO(ListaVO_Turno l);
-int copyListaVO(ListaVO_Turno l, Turno *destino);
-int insertListaVO(ListaVO_Turno *l, Turno elem);
-int suppressListaVO(ListaVO_Turno *l);
+Turno copyListaVO(ListaVO_Turno l);
+void insertListaVO(ListaVO_Turno *l, Turno elem);
+void suppressListaVO(ListaVO_Turno *l);
 
 /* =========================================================================
  * IMPLEMENTACION DE LAS FUNCIONES PRIMITIVAS
@@ -116,12 +118,8 @@ int isOosListaVO(ListaVO_Turno l) {
  * Propósito: Copia el Turno actual sobre la variable *destino sin desapilar.
  * Retorno: 1 si tuvo exito, 0 si la lista estaba vacia o cur fuera de estructura.
  */
-int copyListaVO(ListaVO_Turno l, Turno *destino) {
-    if (destino == NULL || l.cur == NULL) {
-        return 0;
-    }
-    *destino = l.cur->vipd;
-    return 1;
+Turno copyListaVO(ListaVO_Turno l) {
+    return l.cur->vipd;
 }
 
 /*
@@ -131,11 +129,8 @@ int copyListaVO(ListaVO_Turno l, Turno *destino) {
  * Retorno: 1 si pudo asignar memoria e insertar, 0 si fallo malloc.
  */
 
-int insertListaVO ( ListaVO_Turno *l, Turno t ){
+void insertListaVO ( ListaVO_Turno *l, Turno t ){
     Nodo *nuevo = (Nodo*) malloc(sizeof(Nodo));
-    if (nuevo == NULL) {
-        return 0;
-    }
 
     if( l->cur == l->acc ){
         l->acc = nuevo;
@@ -148,7 +143,6 @@ int insertListaVO ( ListaVO_Turno *l, Turno t ){
         l->cur = nuevo;
     }
     l->cur->vipd = t;
-    return 1;
 }
 
 /*
@@ -156,7 +150,7 @@ int insertListaVO ( ListaVO_Turno *l, Turno t ){
  * Propósito: Elimina el nodo apuntado por cur y entrega la memoria con free.
  * Retorno: 1 si elimino con exito, 0 si no habia elemento que suprimir.
  */
-int suppressListaVO(ListaVO_Turno *l) {
+void suppressListaVO(ListaVO_Turno *l) {
     Nodo *elim;
 
     /*if (isOosListaVO(*l) == 1 || isEmptyListaVO(*l) == 1) {       //control que hay que hacer en el main.c
