@@ -5,7 +5,7 @@
 #include "fecha.h"
 #include "turno.h"
 #include "listaVO_turno.h"
-#include "agenda.h"
+
 #include "pacientes.h"
 
 //funciones de turno y listaVOturno

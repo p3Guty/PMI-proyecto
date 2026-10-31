@@ -1,3 +1,4 @@
+// cspell:disable
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,11 +7,12 @@
 #include "fecha.h"
 #include "turno.h"
 #include "listaVO_turno.h"
-#include "agenda.h"
 #include "pacientes.h"
 
-int hola;
-
+#define MAX_CADENA 15
+#define MAX_PACIENTES 200
+#define MAX_MUTUAL 50
+#define Tagenda 390
 void cargarPacienteMenu(ListaE_Paciente *listaP) {
     long int dniIngresado;
     char nombreIngresado[15];
@@ -577,8 +579,8 @@ void cargarbackup(ListaVO_Turno *l1, ListaE_Paciente *l2, Fecha agenda[]){
         resetListaE(l2);
 
         while(fscanf(fp, "Nombre: %s.\n Apellido: %s.\n D.N.I: %ld.\n Obra social: %d.\n\n", n, a, &dni, &oso)== 4){
-            modificar_nombrePaciente(&p, n[]);
-            modificar_apellidoPaciente(&p, a[]);
+            modificar_nombrePaciente(&p, n);
+            modificar_apellidoPaciente(&p, a);
             modificar_dniPaciente(&p, dni);
             modificar_osocialPaciente(&p, oso);
 
