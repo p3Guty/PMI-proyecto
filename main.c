@@ -517,3 +517,90 @@ void backup(ListaVO_Turno l1, ListaE_Paciente l2, Fecha a[]){
     printf("Respaldo completado con exito en 'agenda.txt'.\n\n");
 
 }
+//                          consigna t                              //
+void cargarbackup(ListaVO_turno *l1, listaE_Paciente *l2, Fecha agenda[]){
+
+//--------------cargar desde turnos.txt a lista de turnos----------------//
+FILE *ft;
+ft= fopen("turnos.txt", "r");
+if(ft == NULL){
+    printf("Error al abrir el archivo 'turnos.txt'.\n");
+    return;
+}
+else{
+    Turno t;
+    int id, estado;
+    Fecha f;
+    float monto;
+    char mutual[MAX_MUTUAL];
+    long int dni;
+    int cant;
+    cant=0;
+
+    resetListaVO(l1);
+
+    while (fscanf(ft, "Turno: %d.\\n D.N.I. del paciente: %ld.\\n Monto: %f.\\n Mutual: %s.\\n Fecha: %d/%d/%d | Hora: %d:%d Hs.\\n Estado: %d\\n Disponibilidad: %c\\n\\n", &id, &dni, &monto, mutual, &f.dia, &f.mes, &f.anio, &f.hora, &f.minuto, &estado, &f.disponible) == 11){
+        modificar_idTurno(&t, id);
+        modificar_dniPaciente(&t, dni);
+        modificar_monto(&t, monto);
+        modificar_mutual(&t, mutual[]);
+        modificar_fechaTurno(&t, f);
+        modificar_estadoTurno(&t, estado);
+
+        insertListaVO(l1, t);
+        cant++;
+    }
+    fclose(ft);
+    printf("%d turnos de 'turnos.txt' cargados con exito en la lista. \n\n", cant);
+}
+
+//--------------cargar desde pacientes.txt a lista de pacientes----------------//
+FILE fp;
+fp= fopen("pacient.txt", "r");
+if(fp == NULL){
+    printf("Error: no se pudo abrir el archivo 'paciente.txt'.\n\n");
+    return;
+}
+else{
+    Paciente p;
+    char n[MAX_CADENA];
+    char a[MAX_CADENA];
+    long dni;
+    int oso;
+    int cant;
+
+    resetListaE(l2);
+
+    while(fscanf(fp, "Nombre: %s.\n Apellido: %s.\n D.N.I: %ld.\n Obra social: %d.\n\n", n, a, &dni, &oso)== 4){
+        modificar_nombrePaciente(&p, n[]);
+        modificar_apellidoPaciente(&p, a[]);
+        modificar_dniPaciente(&p, dni);
+        modificar_osocialPaciente(&p, oso);
+
+        insertListaE(l2, p);
+        cant++;
+    }
+    fclose(l2);
+    printf("%d datos de pacientes de 'paciente.txt' cargados con exito en la lista. \n\n", cant);
+}
+
+//--------------cargar desde agenda.txt a la agenda----------------//
+FILE *fa;
+fa=fopen("agenda.txt", "r");
+if(fa == NULL){
+    printf("Error. No se pudo abrir el archivo 'agenda.txt'.\n\n");
+}
+else{
+    int d, m, h, min, a, i;
+    char dispo;
+    i=0;
+
+    while(i < Tagenda && fscanf(fp, "Dia: %02d.\n Mes: %02d.\n Anio: %d.\n Horario: %02d:%02d.\n Disponibilidad: '%c'\n\n", &d, &m, &a, &h, &min, &dispo)== 6){
+        set_fecha(&agenda[i], d, m, h, min, dispo);
+        i++;
+    }
+    printf("Agenda cargada con exito con las fechas de 'agenda.txt' (%d fechas).", i+1);
+}
+//-----------fin----------//
+}
+
