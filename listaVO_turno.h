@@ -1,3 +1,4 @@
+//cspell:disable
 #ifndef LISTAVO_TURNO_H_INCLUDED
 #define LISTAVO_TURNO_H_INCLUDED
 
