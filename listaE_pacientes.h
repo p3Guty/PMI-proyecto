@@ -1,9 +1,4 @@
-/* =========================================================================
- * ARCHIVO: listaE_Paciente.h
- * COMPONENTE: TDA Lista Estatica Desordenada de Pacientes (Persona 1 - PMI 2026)
- * DESCRIPCION: Implementa el almacenamiento estatico de pacientes mediante
- *              cursor e incluye la busqueda por DNI.
- * ========================================================================= */
+//cspell:disable
 
 #ifndef LISTAE_PACIENTES_H_INCLUDE
 #define LISTAE_PACIENTES_H_INCLUDE
@@ -68,9 +63,7 @@ void resetListaE(ListaE_Paciente *l) {
 }
 
 void forwardsListaE(ListaE_Paciente *l) {
-    //if (l->cur >= 0 && l->cur < l->cant) {  //control que hay que hacer en el main
-        l->cur++;
-    //}
+    l->cur++;
 }
 
 int isOosListaE(ListaE_Paciente l) {
@@ -82,11 +75,6 @@ int isOosListaE(ListaE_Paciente l) {
 }
 
 int copyListaE(ListaE_Paciente l, Paciente *destino) {
-    /*if (isOosListaE(l) == 1) {
-        return 0;
-    }*/                     //poner en el main.c
-    //*destino = l.elementos[l.cur];
-    //return 1;
     if (destino == NULL || l.cur < 0 || l.cur >= l.cant) {
         return 0;
     }
@@ -96,20 +84,7 @@ int copyListaE(ListaE_Paciente l, Paciente *destino) {
 
 void insertListaE(ListaE_Paciente *l, Paciente elem) {
     int i;
-    int pos_insert; //no hace falta esto 
-
-    /* if (isFullListaE(*l) == 1) {
-        return 0;  Fallo: Lista llena 
-    }
-                                
-    if (isOosListaE(*l) == 1) {
-        pos_insert = l->cant;
-    } else {
-        pos_insert = l->cur;
-    }
-    */
-
-    /* Desplazamiento a la derecha */ //forma correcta por el profe
+    /* Desplazamiento a la derecha */
     if( isEmptyListaE( *l ) ) l->cur++;
     else {
         for (i = l->cant; i > l->cur ; i--) {
@@ -118,32 +93,15 @@ void insertListaE(ListaE_Paciente *l, Paciente elem) {
     }
     l->elementos[ l->cur++] = elem;
     l->cant++;
-    //l->cur = pos_insert;
 }
 
 void suppressListaE(ListaE_Paciente *l) {
     int i;
-    //int pos_suppress;
-
-    /*if (isOosListaE(*l) == 1 || isEmptyListaE(*l) == 1) {
-        return 0;
-    }*/                             //forma incorrecta
-
-    //pos_suppress = l->cur;
-
-    /* Desplazamiento a la izquierda */  //esto esta bien 
+    //esto esta bien 
     for (i = l->cur; i < l->cant - 1; i++) {
         l->elementos[i] = l->elementos[i + 1];
     }
-
     l->cant--;
-    /*
-    if (l->cant == 0) {
-        l->cur = -1;
-    } else if (l->cur >= l->cant) {             //demas todo esto
-        l->cur = l->cant - 1;
-    }*/
-
 }
 
 #endif // LISTAE_PACIENTES_H_INCLUDE

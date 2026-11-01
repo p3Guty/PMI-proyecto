@@ -8,8 +8,6 @@
 #include "listaVO_turno.h"
 #include "pacientes.h"
 
-#define MAX_CADENA 15
-#define MAX_PACIENTES 200
 #define MAX_MUTUAL 50
 #define Tagenda 390
 void cargarPacienteMenu(ListaE_Paciente *listaP) {
@@ -613,81 +611,78 @@ void cargarbackup(ListaVO_Turno *l1, ListaE_Paciente *l2, Fecha agenda[]){
 // Consigna p: Mostrar los datos de un paciente según el DNI. 
 // Recibe la lista estática de pacientes. 
 
-void mostrarPacientePorDniMenu(listaE_Paciente listaP) {
+void mostrarPacientePorDni(ListaE_Paciente listaP) {
     long int dniIngresado;
     int encontrado = 0;
     Paciente pCopia;
 
+    printf("\n=== [OPCION p] BUSCAR Y MOSTRAR PACIENTE ===\n");
 
-    printf("\\n=== [OPCION p] BUSCAR Y MOSTRAR PACIENTE ===\\n");
-
-    /*Control de lista vacia */
-
-    if (isEmpty(listaP)) {
-        printf("Aviso: No hay pacientes registrados en el sistema.\\n");
+    /* Control de lista vacia */
+    if (isEmptyListaE(listaP)) {
+        printf("Aviso: No hay pacientes registrados en el sistema.\n");
         return;
     }
- 
+
     /* 2. Solicitud de DNI */
     printf("Ingrese el DNI del paciente a consultar: ");
     scanf("%ld", &dniIngresado);
 
     /* 3. Recorrido de la lista con cursor */
-
-    reset(&listaP);
-    while (!isOos(listaP) && !encontrado) {
-        pCopia = copy(listaP);
-         if (getDni(pCopia) == dniIngresado) {
-             encontrado = 1;
-             
-             printf("\\n--- DATOS DEL PACIENTE ENCONTRADO ---\\n");
-                mostrarPaciente(pCopia); /* O usar los getters del TDA Paciente */
-                } else {
-                    forward(&listaP); 
-              } 
-            }
-            /* 4. Aviso si no existia */
-            if (!encontrado) {
-                printf("Aviso: No se encontro ningun paciente registrado con el DNI %ld.\\n", dniIngresado);
-            }
+    resetListaE(&listaP);
+    while (!isOosListaE(listaP) && !encontrado) {
+        copyListaE(listaP, &pCopia);
+        if (obtener_dniPaciente(pCopia) == dniIngresado) {
+            encontrado = 1;
+            printf("\n--- DATOS DEL PACIENTE ENCONTRADO ---\n");
+            mostrarPaciente(pCopia);
+        } else {
+            forwardsListaE(&listaP);
         }
+    }
 
+    /* 4. Aviso si no existia */
+    if (!encontrado) {
+        printf("Aviso: No se encontro ningun paciente registrado con el DNI %ld.\n", dniIngresado);
+    }
+}
 
-// Consigna q: Mostrar los datos de todos los pacientes. 
+// Consigna q: Mostrar los datos de todos los pacientes.
 // Recibe la lista estática de pacientes.
+void mostrarTodosLosPacientesMenu(ListaE_Paciente listaP) {
+    Paciente pCopia;
+    int contador = 0;
 
-#include <stdio.h>
-#include "paciente.h"
-#include "listaE_pacientes.h"
+    printf("\n=== [OPCION q] LISTADO COMPLETO DE PACIENTES ===\n");
 
-void mostrarTodosLosPacientesMenu(listaE\_Paciente listaP) {
-Paciente pCopia;
-int contador = 0
+    /* 1. Control de lista vacia */
+    if (isEmptyListaE(listaP)) {
+        printf("Aviso: No hay pacientes registrados en el sistema.\n");
+        return;
+    }
 
-printf("\\n=== [OPCION q] LISTADO COMPLETO DE PACIENTES ===\\n");
+    /* 2. Ubicar el cursor en el primer elemento */
+    resetListaE(&listaP);
 
-/* 1. Control de lista vacia */
-if (isEmpty(listaP)){
-    printf ("Aviso: No hay pacientes registrados en el sistema. \n");
-    return;
-  }
+    /* 3. Recorrido secuencial de la lista de principio a fin */
+    while (!isOosListaE(listaP)) {
+        copyListaE(listaP, &pCopia);
+        contador++;
+        printf("\n--- Paciente #%d ---\n", contador);
+        mostrarPaciente(pCopia);
 
- /* 2. Ubicar el cursor en el primer elemento */
+        /* Invocación a la función de muestra del TDA Paciente */
+        forwardsListaE(&listaP);
+    }
+}
 
- reset(&listaP);
+int main() {
+    ListaE_Paciente pacientes;
+    ListaVO_Turno turnos;
+    Fecha agenda[Tagenda]; //cosita que pide el profe para que este bien que es solo esto en el main y lo demas es simplemente llenarla con las fechas libres
+    int opcion;
+    
+    initListaE(&pacientes);
+    initListaVO(&turnos);
 
- 
-/* 3. Recorrido secuencial de la lista de principio a fin */
-
-while (!isOos(listaP)) {
-  pCopia = copy(listaP);
-   contador++;
-    printf("\\n--- Paciente #%d ---\\n", contador);
-     mostrarPaciente(pCopia); 
-     
-     /* Invocación a la función de muestra del TDA Paciente */ 
-
-     forward(&listaP);
-
-     
-
+}
