@@ -8,12 +8,11 @@
 #ifndef PACIENTES_H_INCLUDE
 #define PACIENTES_H_INCLUDE
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #define MAX_CADENA 50
 
+/* Consigna a: TDA Paciente, sus campos y operaciones primitivas. */
 /* -------------------------------------------------------------------------
  * ESTRUCTURA DE DATOS: Paciente
  * ------------------------------------------------------------------------- */
@@ -28,13 +27,13 @@ typedef struct {
 void initPaciente(Paciente *p);
 Paciente crearPaciente(const char *nombre, const char *apellido, long dni, int osocial);
 
-void modificar_nombrePaciente(Paciente *p, const char *nuevo_nombre);
-void modificar_apellidoPaciente(Paciente *p, const char *nuevo_apellido);
-void modificar_dniPaciente(Paciente *p, long nuevo_dni);
-void modificar_osocialPaciente(Paciente *p, int nueva_osocial);
+int modificar_nombrePaciente(Paciente *p, const char *nuevo_nombre);
+int modificar_apellidoPaciente(Paciente *p, const char *nuevo_apellido);
+int modificar_dniPaciente(Paciente *p, long nuevo_dni);
+int modificar_osocialPaciente(Paciente *p, int nueva_osocial);
 
-char* obtener_nombrePaciente(Paciente p);
-char* obtener_apellidoPaciente(Paciente p);
+char *obtener_nombrePaciente(Paciente p);
+char *obtener_apellidoPaciente(Paciente p);
 long obtener_dniPaciente(Paciente p);
 int obtener_osocialPaciente(Paciente p);
 
@@ -53,66 +52,50 @@ void initPaciente(Paciente *p) {
 /* Construye y retorna una estructura Paciente validando los datos */
 Paciente crearPaciente(const char *nombre, const char *apellido, long dni, int osocial) {
     Paciente p;
-
-    if (nombre != NULL) {
-        strcpy(p.nombre, nombre);
-    } else {
-        strcpy(p.nombre, "Sin Nombre");
-    }
-
-    if (apellido != NULL) {
-        strcpy(p.apellido, apellido);
-    } else {
-        strcpy(p.apellido, "Sin Apellido");
-    }
-
-    if (dni > 0) {
-        p.dni = dni;
-    } else {
-        p.dni = 0;
-    }
-
-    if (osocial == 1) {
-        p.osocial = 1;
-    } else {
-        p.osocial = 0;
-    }
+    initPaciente(&p);
+    modificar_nombrePaciente(&p, nombre);
+    modificar_apellidoPaciente(&p, apellido);
+    modificar_dniPaciente(&p, dni);
+    modificar_osocialPaciente(&p, osocial);
 
     return p;
 }
 
 /* SETTERS (MODIFICADORES) */
 
-void modificar_nombrePaciente(Paciente *p, const char *nuevo_nombre) {
+int modificar_nombrePaciente(Paciente *p, const char *nuevo_nombre) {
     strcpy(p->nombre, nuevo_nombre);
-
+    return 1;
 }
 
-void modificar_apellidoPaciente(Paciente *p, const char *nuevo_apellido) {
+int modificar_apellidoPaciente(Paciente *p, const char *nuevo_apellido) {
     strcpy(p->apellido, nuevo_apellido);
+    return 1;
 }
 
-void modificar_dniPaciente(Paciente *p, long nuevo_dni) {
+int modificar_dniPaciente(Paciente *p, long nuevo_dni) {
     p->dni = nuevo_dni;
+    return 1;
 }
 
-void modificar_osocialPaciente(Paciente *p, int nueva_osocial) {
+int modificar_osocialPaciente(Paciente *p, int nueva_osocial) {
     p->osocial = nueva_osocial;
+    return 1;
 }
-    
+
 /* GETTERS (CONSULTORES) */
 
-char* obtener_nombrePaciente(Paciente p) {
+char *obtener_nombrePaciente(Paciente p) {
     char *nombre_a_retornar = (char *) malloc( strlen( p.nombre ) + 1 );
     if (nombre_a_retornar == NULL ) exit(1);
     strcpy( nombre_a_retornar, p.nombre );
     return nombre_a_retornar; 
 }
 
-char* obtener_apellidoPaciente(Paciente p) {
-   char *nombre_a_retornar = (char *) malloc( strlen( p.apellido ) + 1 );
+char *obtener_apellidoPaciente(Paciente p) {
+    char *nombre_a_retornar = (char *) malloc( strlen( p.nombre ) + 1 );
     if (nombre_a_retornar == NULL ) exit(1);
-    strcpy( nombre_a_retornar, p.apellido );
+    strcpy( nombre_a_retornar, p.nombre );
     return nombre_a_retornar; 
 }
 
