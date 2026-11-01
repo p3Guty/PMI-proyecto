@@ -28,3 +28,4 @@
 90970946|1|Pilar|Vega
 95997305|0|Lucia|Alonso
 93180730|1|Manuel|Escobar
+1|0|sos|sas

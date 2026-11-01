@@ -1,9 +1,6 @@
-//cspell:disable
 #ifndef LISTAVO_TURNO_H_INCLUDED
 #define LISTAVO_TURNO_H_INCLUDED
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "turno.h"
 
 struct nodo {
@@ -18,16 +15,7 @@ typedef struct {
     Nodo *aux;
 } ListaVO_Turno;
 
-
-void initListaVO(ListaVO_Turno *l);
-int isEmptyListaVO(ListaVO_Turno l);
-int isFullListaVO(ListaVO_Turno l);
-void resetListaVO(ListaVO_Turno *l);
-void forwardsListaVO(ListaVO_Turno *l);
 int isOosListaVO(ListaVO_Turno l);
-Turno copyListaVO(ListaVO_Turno l);
-int insertListaVO(ListaVO_Turno *l, Turno elem);
-int suppressListaVO(ListaVO_Turno *l);
 
 void initListaVO(ListaVO_Turno *l) {
     l->acc = NULL;
@@ -36,20 +24,18 @@ void initListaVO(ListaVO_Turno *l) {
 }
 
 int isEmptyListaVO(ListaVO_Turno l) {
-    if (l.acc == NULL) {
-        return 1;
-    } else {
-        return 0;
-    }
+    return l.acc == NULL;
 }
 
 int isFullListaVO(ListaVO_Turno l) {
-    Nodo *nodo_aux = (Nodo *) malloc( sizeof(Nodo) );
-    if( nodo_aux == NULL ) return 1;
-    else{
-        free( nodo_aux );
-        return 0;
+    Nodo *nodo_aux;
+    (void)l;
+    nodo_aux = (Nodo *)malloc(sizeof(Nodo));
+    if (nodo_aux == NULL) {
+        return 1;
     }
+    free(nodo_aux);
+    return 0;
 }
 
 void resetListaVO(ListaVO_Turno *l) {
@@ -57,52 +43,71 @@ void resetListaVO(ListaVO_Turno *l) {
     l->aux = NULL;
 }
 
+
 void forwardsListaVO(ListaVO_Turno *l) {
+    if (isOosListaVO(*l)) {
+        return;
+    }
     l->aux = l->cur;
     l->cur = l->cur->next;
 }
 
 int isOosListaVO(ListaVO_Turno l) {
-    if (l.cur == NULL) {
-        return 1;
-    } else {
-        return 0;
-    }
+    return l.cur == NULL;
 }
 
 Turno copyListaVO(ListaVO_Turno l) {
     return l.cur->vipd;
 }
 
-int insertListaVO ( ListaVO_Turno *l, Turno t ){
-    Nodo *nuevo = (Nodo*) malloc(sizeof(Nodo));
+int insertListaVO(ListaVO_Turno *l, Turno t) {
 
-    if( l->cur == l->acc ){
-        l->acc = nuevo;
-        nuevo->next = l->cur;
-        l->cur = nuevo;
-        l->aux = nuevo;
-    } else {
-        l->aux->next = nuevo;
-        nuevo->next = l->cur;
-        l->cur = nuevo;
+    if (isFullListaVO(*l) == 1) {
+        return;
     }
-    l->cur->vipd = t;
+
+    Nodo *nuevoNodo = (Nodo*)malloc(sizeof(Nodo));
+    if (nuevoNodo == NULL) {
+        exit(1);
+    }
+    nuevoNodo->vipd = t;
+
+    if (l->cur == l->acc ) {
+        l->acc = nuevoNodo;
+        nuevoNodo->next = l->cur;
+        l->cur = l->acc;
+        l->aux = l->acc;
+    }else {
+        l->aux->next = nuevoNodo;
+        nuevoNodo->next = l->cur;
+        l->cur = nuevoNodo;
+    }
+}
+
+
+int suppressListaVO(ListaVO_Turno *l) {
+    Nodo *eliminado;
+    eliminado = l->cur;
+    if (l->aux == NULL) {
+        l->acc = eliminado->next;
+    } else {
+        l->aux->next = eliminado->next;
+    }
+    l->cur = eliminado->next;
+    free(eliminado);
     return 1;
 }
 
-int suppressListaVO(ListaVO_Turno *l) {
-    if ( l->acc == l->cur ){
-        l->acc = l->acc->next;
-        free( l->cur );
-        l->cur = l->acc;
-        l->aux = NULL;
-    } else {
-        l->aux->next = l->cur->next;
-        free( l->cur );
-        l->cur = l->aux->next;
+void liberarListaVO(ListaVO_Turno *l) {
+    Nodo *actual;
+    Nodo *siguiente;
+    actual = l->acc;
+    while (actual != NULL) {
+        siguiente = actual->next;
+        free(actual);
+        actual = siguiente;
     }
-    return 1;
+    initListaVO(l);
 }
 
 #endif // LISTAVO_TURNO_H_INCLUDED

@@ -1,13 +1,8 @@
-/* =========================================================================
- * ARCHIVO: paciente.h
- * COMPONENTE: TDA Paciente (Persona 1 - PMI 2026)
- * DESCRIPCION: Define la estructura interna de un Paciente y sus operaciones
- *              primitivas de lectura y modificacion sin entrada/salida.
- * ========================================================================= */
-
+//cspell:disable
 #ifndef PACIENTES_H_INCLUDE
 #define PACIENTES_H_INCLUDE
 
+#include <stdlib.h>
 #include <string.h>
 
 #define MAX_CADENA 50
@@ -23,25 +18,17 @@ typedef struct {
     int osocial;               /* 1 si posee obra social, 0 si no posee */
 } Paciente;
 
-/* PROTOTIPOS DE LAS FUNCIONES PRIMITIVAS */
 void initPaciente(Paciente *p);
 Paciente crearPaciente(const char *nombre, const char *apellido, long dni, int osocial);
-
-int modificar_nombrePaciente(Paciente *p, const char *nuevo_nombre);
-int modificar_apellidoPaciente(Paciente *p, const char *nuevo_apellido);
-int modificar_dniPaciente(Paciente *p, long nuevo_dni);
-int modificar_osocialPaciente(Paciente *p, int nueva_osocial);
-
+int modificar_nombrePaciente(Paciente *p, const char *nombre);
+int modificar_apellidoPaciente(Paciente *p, const char *apellido);
+int modificar_dniPaciente(Paciente *p, long dni);
+int modificar_osocialPaciente(Paciente *p, int osocial);
 char *obtener_nombrePaciente(Paciente p);
 char *obtener_apellidoPaciente(Paciente p);
 long obtener_dniPaciente(Paciente p);
 int obtener_osocialPaciente(Paciente p);
 
-/* =========================================================================
- * IMPLEMENTACION DE LAS FUNCIONES PRIMITIVAS
- * ========================================================================= */
-
-/* Inicializa la estructura con valores neutros por defecto */
 void initPaciente(Paciente *p) {
     strcpy(p->nombre, "Sin Nombre");
     strcpy(p->apellido, "Sin Apellido");
@@ -49,7 +36,6 @@ void initPaciente(Paciente *p) {
     p->osocial = 0;
 }
 
-/* Construye y retorna una estructura Paciente validando los datos */
 Paciente crearPaciente(const char *nombre, const char *apellido, long dni, int osocial) {
     Paciente p;
     initPaciente(&p);
@@ -57,54 +43,42 @@ Paciente crearPaciente(const char *nombre, const char *apellido, long dni, int o
     modificar_apellidoPaciente(&p, apellido);
     modificar_dniPaciente(&p, dni);
     modificar_osocialPaciente(&p, osocial);
-
     return p;
 }
 
-/* SETTERS (MODIFICADORES) */
-
-int modificar_nombrePaciente(Paciente *p, const char *nuevo_nombre) {
-    strcpy(p->nombre, nuevo_nombre);
+int modificar_nombrePaciente(Paciente *p, const char *nombre) {
+    strcpy(p->nombre, nombre);
     return 1;
 }
 
-int modificar_apellidoPaciente(Paciente *p, const char *nuevo_apellido) {
-    strcpy(p->apellido, nuevo_apellido);
+int modificar_apellidoPaciente(Paciente *p, const char *apellido) {
+    strcpy(p->apellido, apellido);
     return 1;
 }
 
-int modificar_dniPaciente(Paciente *p, long nuevo_dni) {
-    p->dni = nuevo_dni;
+int modificar_dniPaciente(Paciente *p, long dni) {
+    p->dni = dni;
     return 1;
 }
 
-int modificar_osocialPaciente(Paciente *p, int nueva_osocial) {
-    p->osocial = nueva_osocial;
+int modificar_osocialPaciente(Paciente *p, int osocial) {
+    p->osocial = osocial;
     return 1;
 }
-
-/* GETTERS (CONSULTORES) */
 
 char *obtener_nombrePaciente(Paciente p) {
-    char *nombre_a_retornar = (char *) malloc( strlen( p.nombre ) + 1 );
-    if (nombre_a_retornar == NULL ) exit(1);
-    strcpy( nombre_a_retornar, p.nombre );
-    return nombre_a_retornar; 
+    char *nombre = (char *)malloc(strlen(p.nombre) + 1);
+    if (nombre != NULL) strcpy(nombre, p.nombre);
+    return nombre;
 }
 
 char *obtener_apellidoPaciente(Paciente p) {
-    char *nombre_a_retornar = (char *) malloc( strlen( p.nombre ) + 1 );
-    if (nombre_a_retornar == NULL ) exit(1);
-    strcpy( nombre_a_retornar, p.nombre );
-    return nombre_a_retornar; 
+    char *apellido = (char *)malloc(strlen(p.apellido) + 1);
+    if (apellido != NULL) strcpy(apellido, p.apellido);
+    return apellido;
 }
 
-long obtener_dniPaciente(Paciente p) {
-    return p.dni;
-}
-
-int obtener_osocialPaciente(Paciente p) {
-    return p.osocial;
-}
+long obtener_dniPaciente(Paciente p) { return p.dni; }
+int obtener_osocialPaciente(Paciente p) { return p.osocial; }
 
 #endif // PACIENTES_H_INCLUDE

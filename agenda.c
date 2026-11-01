@@ -1,21 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "fecha.h"
 
-#define Tagenda 390//es el tamanio de la agenda, la cantidad de turnos de nov y dic.//
+/* El tipo y las declaraciones evitan incluir fecha.h y duplicar sus funciones. */
+typedef struct fecha {
+    int dia;
+    int mes;
+    int anio;
+    int hora;
+    int minuto;
+    char disponible;
+} Fecha;
 
-/* Consigna o: carga automatica de fechas validas en la agenda. */
-//---------------Para la agenda-------------//
+#define TAGENDA 390
 
-int llenaragenda(Fecha ag[Tagenda]){
-    //indice de la agenda                            (este tambien es el id_turno !!)
-    //mes a aplicar a los espacios//
-    //dia a aplicar a los espacios//
-    /// es necesario para saltear los fines de semana D:///
-    // hora a aplicar a los espacios//
-    // minutos a aplicaar a los espacios//
-    // modificacion a las variables d(dia) y n(mes) las casillas de diciembre //
-    // llego a diciembre, feliz navidad eeee//
+void inicio(Fecha *p);
+int set_fecha(Fecha *p, int d, int m, int h, int minuto, char dispo);
+
+int llenaragenda(Fecha ag[TAGENDA]){
     int mes;
     int dia;
     int diaSemana = 0;
@@ -28,18 +29,18 @@ int llenaragenda(Fecha ag[Tagenda]){
     }
 
     // inicio de la agenda //
-    for (turnoDia = 0; turnoDia < Tagenda; turnoDia++) {
+    for (turnoDia = 0; turnoDia < TAGENDA; turnoDia++) {
         inicio(&ag[turnoDia]);
     }
 
-    for (mes = 11; mes <= 12 && cantidad < Tagenda; mes++) {
+    for (mes = 11; mes <= 12 && cantidad < TAGENDA; mes++) {
         diasMes = mes == 11 ? 30 : 31;
-        for (dia = 1; dia <= diasMes && cantidad < Tagenda; dia++) {
+        for (dia = 1; dia <= diasMes && cantidad < TAGENDA; dia++) {
             int feriado = (mes == 11 && dia == 23) ||
                           (mes == 12 && (dia == 9 || dia == 25));
             if (diaSemana >= 1 && diaSemana <= 5 && !feriado) {
                 //for para las horas, minutos y dias //
-                for (turnoDia = 0; turnoDia < 10 && cantidad < Tagenda;
+                for (turnoDia = 0; turnoDia < 10 && cantidad < TAGENDA;
                      turnoDia++) {
                     int hora = 8 + turnoDia / 2;
                     int minuto = (turnoDia % 2) * 30;
@@ -49,8 +50,6 @@ int llenaragenda(Fecha ag[Tagenda]){
                     cantidad++;
                 }
             }
-            // para hacer que no entren los sabados ni domingos)
-            // para hacer que no entren los unicos feriados (23/11, 9/12, 25/12)//
             diaSemana = (diaSemana + 1) % 7;
         }
     }
