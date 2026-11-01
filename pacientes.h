@@ -84,38 +84,25 @@ Paciente crearPaciente(const char *nombre, const char *apellido, long dni, int o
 /* SETTERS (MODIFICADORES) */
 
 void modificar_nombrePaciente(Paciente *p, const char *nuevo_nombre) {
-    //if (nuevo_nombre != NULL) {
-        strcpy(p->nombre, nuevo_nombre);
-    //}
+    strcpy(p->nombre, nuevo_nombre);
+
 }
 
 void modificar_apellidoPaciente(Paciente *p, const char *nuevo_apellido) {
-    //if (nuevo_apellido != NULL) {
-        strcpy(p->apellido, nuevo_apellido);
-    //}
+    strcpy(p->apellido, nuevo_apellido);
 }
 
 void modificar_dniPaciente(Paciente *p, long nuevo_dni) {
-    //if (nuevo_dni > 0) {
-        p->dni = nuevo_dni;
-    //}
+    p->dni = nuevo_dni;
 }
 
 void modificar_osocialPaciente(Paciente *p, int nueva_osocial) {
-    if (nueva_osocial == 1) {
-        p->osocial = 1;
-    } else {
-        p->osocial = 0;
-    }
+    p->osocial = nueva_osocial;
 }
-
+    
 /* GETTERS (CONSULTORES) */
 
 char* obtener_nombrePaciente(Paciente p) {
-    /*if (destino != NULL) {
-        strcpy(destino, p.nombre);
-    }*/
-
     char *nombre_a_retornar = (char *) malloc( strlen( p.nombre ) + 1 );
     if (nombre_a_retornar == NULL ) exit(1);
     strcpy( nombre_a_retornar, p.nombre );
@@ -123,9 +110,6 @@ char* obtener_nombrePaciente(Paciente p) {
 }
 
 char* obtener_apellidoPaciente(Paciente p) {
-    /*if (destino != NULL) {
-        strcpy(destino, p.apellido);
-    }*/
    char *nombre_a_retornar = (char *) malloc( strlen( p.apellido ) + 1 );
     if (nombre_a_retornar == NULL ) exit(1);
     strcpy( nombre_a_retornar, p.apellido );
