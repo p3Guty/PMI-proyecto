@@ -46,7 +46,7 @@ void modificar_estadoTurno(Turno *t, int estado);
 int obtener_idTurno(Turno t);
 long obtener_dniPacienteTurno(Turno t);
 float obtener_monto(Turno t);
-void obtener_mutual(Turno t, char *destino);
+int obtener_mutual(Turno t, char *destino);
 Fecha obtener_fechaTurno(Turno t);
 int obtener_estadoTurno(Turno t);
 
@@ -79,30 +79,11 @@ Turno crearTurno(int id, long dni, float monto, const char *mutual, Fecha f, int
     Turno t;
     t.id_turno = id;
     t.dni_paciente = dni;
-
-    /* Validacion de monto no negativo */
-    if (monto >= 0.0f) {
-        t.monto = monto;
-    } else {
-        t.monto = 0.0f;
-    }
-
-    /* Validacion de cadena de mutual */
-    if (mutual != NULL) {
-        strcpy(t.mutual, mutual);
-    } else {
-        strcpy(t.mutual, "Sin Mutual");
-    }
-
+    t.monto = monto;
+    strcpy(t.mutual, mutual);
+    strcpy(t.mutual, "Sin Mutual");
     t.fecha = f;
-
-    /* Validacion de estado entre 1 y 4 */
-    if (estado >= 1 && estado <= 4) {
-        t.estado = estado;
-    } else {
-        t.estado = ESTADO_SOLICITADO;
-    }
-
+    t.estado = estado;
     return t;
 }
 
@@ -113,32 +94,27 @@ void modificar_idTurno(Turno *t, int id) {
 }
 
 void modificar_dniPacienteTurno(Turno *t, long dni) {
-    if (dni > 0) {
-        t->dni_paciente = dni;
-    }
+    t->dni_paciente = dni; 
 }
 
 void modificar_monto(Turno *t, float monto) {
-    if (monto >= 0.0f) {        //realizar controles en el main.c (*)
-        t->monto = monto;
-    }
+    t->monto = monto;
 }
 
+
 void modificar_mutual(Turno *t, const char *mutual) {
-    if (mutual != NULL) { // (*)
-        strcpy(t->mutual, mutual);
-    }
+    strcpy(t->mutual, mutual);
 }
+
 
 void modificar_fechaTurno(Turno *t, Fecha f) {
     t->fecha = f;
 }
 
 void modificar_estadoTurno(Turno *t, int estado) {
-    if (estado >= 1 && estado <= 4) { //(*)
-        t->estado = estado;
-    }
+    t->estado = estado;
 }
+
 
 /* CONSULTORES (GETTERS) */
 
@@ -154,10 +130,9 @@ float obtener_monto(Turno t) {
     return t.monto;
 }
 
-void obtener_mutual(Turno t, char *destino) {
-    if (destino != NULL) {  //(*)
-        strcpy(destino, t.mutual);
-    }
+int obtener_mutual(Turno t, char *destino) {
+    strcpy(destino, t.mutual);
+    return destino;
 }
 
 Fecha obtener_fechaTurno(Turno t) {
