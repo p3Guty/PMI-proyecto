@@ -34,10 +34,10 @@
 		<Unit filename="fecha.h" />
 		<Unit filename="listaE_pacientes.h" />
 		<Unit filename="listaVO_turno.h" />
-		<Unit filename="main.c">
+		<Unit filename="agenda.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="main2.c">
+		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="pacientes.h" />

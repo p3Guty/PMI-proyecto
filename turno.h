@@ -4,7 +4,6 @@
 /* Inclusion de la libreria auxiliar de Fecha */
 #include "pacientes.h"
 #include "fecha.h"
-#include "agenda.h"
 
 /* Inclusión de librerias estandar para manejo de cadenas y memoria */
 #include <stdio.h>
@@ -33,101 +32,42 @@ typedef struct {
     int estado;              /* Estado actual (1=Solicitado, 2=Confirmado, 3=Atendido, 4=Cancelado) */
 } Turno;
 
-/* PROTOTIPOS DE LAS FUNCIONES PRIMITIVAS DEL TDA TURNO */
-void initTurno(Turno *t);
-Turno crearTurno(int id, long dni, float monto, const char *mutual, Fecha f, int estado);
 
-void modificar_idTurno(Turno *t, int id);
-void modificar_dniPaciente(Turno *t, long dni);
-void modificar_monto(Turno *t, float monto);
-void modificar_mutual(Turno *t, const char *mutual);
-void modificar_fechaTurno(Turno *t, Fecha f);
-void modificar_estadoTurno(Turno *t, int estado);
-
-int obtener_idTurno(Turno t);
-long obtener_dniPacienteTurno(Turno t);
-float obtener_monto(Turno t);
-void obtener_mutual(Turno t, char *destino);
-Fecha obtener_fechaTurno(Turno t);
-int obtener_estadoTurno(Turno t);
-
-
-/* =========================================================================
- * IMPLEMENTACION DE LAS FUNCIONES PRIMITIVAS
- * ========================================================================= */
-
-/*
- * Funcion: initTurno
- * Propósito: Limpia la memoria asignando valores neutros e iniciales por defecto.
- * Parametros: t (puntero al Turno a inicializar)
- */
 void initTurno(Turno *t) {
     t->id_turno = -1;
     t->dni_paciente = 0;
     t->monto = 0.0f;
     strcpy(t->mutual, "Sin Mutual");
     t->estado = ESTADO_SOLICITADO;
+    inicio( &t->fecha );
 }
 
-/*
- * Funcion: crearTurno
- * Propósito: Construye y retorna un objeto Turno validando los rangos permitidos.
- * Parametros: id, dni, monto, mutual, f (fecha), estado.
- * Retorno: Estructura Turno cargada.
- */
 Turno crearTurno(int id, long dni, float monto, const char *mutual, Fecha f, int estado) {
     Turno t;
     t.id_turno = id;
     t.dni_paciente = dni;
-
-    /* Validacion de monto no negativo */
-    if (monto >= 0.0f) {
-        t.monto = monto;
-    } else {
-        t.monto = 0.0f;
-    }
-
-    /* Validacion de cadena de mutual */
-    if (mutual != NULL) {
-        strcpy(t.mutual, mutual);
-    } else {
-        strcpy(t.mutual, "Sin Mutual");
-    }
-
+    t.monto = monto;
+    strcpy(t.mutual, mutual);
     t.fecha = f;
-
-    /* Validacion de estado entre 1 y 4 */
-    if (estado >= 1 && estado <= 4) {
-        t.estado = estado;
-    } else {
-        t.estado = ESTADO_SOLICITADO;
-    }
-
+    t.estado = estado;
     return t;
 }
-
-/* MODIFICADORES (SETTERS) */
 
 void modificar_idTurno(Turno *t, int id) {
     t->id_turno = id;
 }
 
-void modificar_dniPaciente(Turno *t, long dni) {
-    if (dni > 0) {
-        t->dni_paciente = dni;
-    }
+void modificar_dniPacienteTurno(Turno *t, long dni) {
+    t->dni_paciente = dni;
 }
 
 void modificar_monto(Turno *t, float monto) {
-    if (monto >= 0.0f) {
-        t->monto = monto;
-    }
+t->monto = monto;
 }
 
+
 void modificar_mutual(Turno *t, const char *mutual) {
-    if (mutual != NULL) {
-        strcpy(t->mutual, mutual);
-    }
+    strcpy(t->mutual, mutual);
 }
 
 void modificar_fechaTurno(Turno *t, Fecha f) {
@@ -135,9 +75,7 @@ void modificar_fechaTurno(Turno *t, Fecha f) {
 }
 
 void modificar_estadoTurno(Turno *t, int estado) {
-    if (estado >= 1 && estado <= 4) {
-        t->estado = estado;
-    }
+    t->estado = estado;
 }
 
 /* CONSULTORES (GETTERS) */
@@ -154,10 +92,9 @@ float obtener_monto(Turno t) {
     return t.monto;
 }
 
-void obtener_mutual(Turno t, char *destino) {
-    if (destino != NULL) {
-        strcpy(destino, t.mutual);
-    }
+int obtener_mutual(Turno t, char *destino) {
+    strcpy(destino, t.mutual);
+    return 1;
 }
 
 Fecha obtener_fechaTurno(Turno t) {
